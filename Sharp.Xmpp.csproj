@@ -122,6 +122,7 @@
     <Compile Include="Extensions\XEP-0065\UPnP\UPnP.cs" />
     <Compile Include="Extensions\XEP-0077\InBandRegistration.cs" />
     <Compile Include="Extensions\XEP-0077\RegistrationCallback.cs" />
+    <Compile Include="Extensions\XEP-0082\DateTimeProfiles.cs" />
     <Compile Include="Extensions\XEP-0084\AvatarChangedEventArgs.cs" />
     <Compile Include="Extensions\XEP-0084\UserAvatar.cs" />
     <Compile Include="Extensions\XEP-0085\ChatState.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Extensions\XEP-0118\TuneEventArgs.cs" />
     <Compile Include="Extensions\XEP-0118\TuneInformation.cs" />
     <Compile Include="Extensions\XEP-0118\UserTune.cs" />
+    <Compile Include="Extensions\XEP-0136\MessageArchiving.cs" />
     <Compile Include="Extensions\XEP-0153\vCardAvatars.cs" />
     <Compile Include="Extensions\XEP-0163\Pep.cs" />
     <Compile Include="Extensions\XEP-0231\BitsOfBinary.cs" />

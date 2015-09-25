@@ -152,6 +152,12 @@
         /// An extension for receiving messages directed to the bare Jid
         /// on multiple resources that have opted-in
         /// </summary>
-        MessageCarbons
+        MessageCarbons,
+
+        /// <summary>
+        /// An extension for the server-side archiving and retrieval of XMPP messages.
+        /// </summary>
+        /// <remarks>Defined in XEP-0136.</remarks>
+        MessageArchiving
     }
 }

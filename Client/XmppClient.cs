@@ -31,6 +31,11 @@ namespace Sharp.Xmpp.Client
         private XmppIm im;
 
         /// <summary>
+        /// Provides access to the 'Message Archiving' XMPP extension functionality.
+        /// </summary>
+        private MessageArchiving messageArchiving;
+
+        /// <summary>
         /// Provides access to the 'Software Version' XMPP extension functionality.
         /// </summary>
         private SoftwareVersion version;
@@ -1532,6 +1537,26 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// Fetch message history from the server.
+        ///
+        /// The 'start' and 'end' attributes MAY be specified to indicate a date range.
+        ///
+        /// If the 'with' attribute is omitted then collections with any JID are returned.
+        ///
+        /// If only 'start' is specified then all collections on or after that date should be returned.
+        ///
+        /// If only 'end' is specified then all collections prior to that date should be returned.
+        /// </summary>
+        /// <param name="max">Maximum number of items to fetch</param>
+        /// <param name="start">Optional start date range to query</param>
+        /// <param name="end">Optional enddate range to query</param>
+        /// <param name="with">Optional JID to filter archive results by</param>
+        public void GetArchive(int max, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
+        {
+            messageArchiving.GetArchive(max, start, end, with);
+        }
+
+        /// <summary>
         /// Unblocks all communication to and from the XMPP entity with the specified
         /// JID.
         /// </summary>
@@ -1743,6 +1768,7 @@ namespace Sharp.Xmpp.Client
             bitsOfBinary = im.LoadExtension<BitsOfBinary>();
             vcardAvatars = im.LoadExtension<VCardAvatars>();
             cusiqextension = im.LoadExtension<CustomIqExtension>();
+            messageArchiving = im.LoadExtension<MessageArchiving>();
         }
     }
 }
