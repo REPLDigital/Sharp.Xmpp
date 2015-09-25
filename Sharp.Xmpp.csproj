@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Sharp.Xmpp.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,8 +53,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ARSoft.Tools.Net, Version=1.8.1.0, Culture=neutral, PublicKeyToken=1940454cd762ec57, processorArchitecture=MSIL">
-      <HintPath>packages\ARSoft.Tools.Net.1.8.1\lib\ARSoft.Tools.Net.dll</HintPath>
+    <Reference Include="ARSoft.Tools.Net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=1940454cd762ec57, processorArchitecture=MSIL">
+      <HintPath>packages\ARSoft.Tools.Net.2.1.4\lib\net45\ARSoft.Tools.Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
