@@ -1,270 +1,322 @@
-﻿using Sharp.Xmpp.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace Sharp.Xmpp.Extensions.Dataforms {
-	/// <summary>
-	/// The base class from which all implementations of data-fields must derive.
-	/// </summary>
-	/// <remarks>Unfortunately, this can not be an abstract class the way the
-	/// data-forms extension has been designed; Forms of type 'submit' are not
-	/// required to include a type-attribute for fields and thus make strongly
-	/// typed data-fields impossible.</remarks>
-	public class DataField {
-		/// <summary>
-		/// The underlying XML element representing the data-field.
-		/// </summary>
-		protected XmlElement element;
+namespace Sharp.Xmpp.Extensions.Dataforms
+{
+    /// <summary>
+    /// The base class from which all implementations of data-fields must derive.
+    /// </summary>
+    /// <remarks>Unfortunately, this can not be an abstract class the way the
+    /// data-forms extension has been designed; Forms of type 'submit' are not
+    /// required to include a type-attribute for fields and thus make strongly
+    /// typed data-fields impossible.</remarks>
+    public class DataField
+    {
+        /// <summary>
+        /// The underlying XML element representing the data-field.
+        /// </summary>
+        protected XmlElement Element
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// A human-readable name for the field.
-		/// </summary>
-		public string Label {
-			get {
-				var v = element.GetAttribute("label");
-				return String.IsNullOrEmpty(v) ? null : v;
-			}
-			private set {
-				if (value == null)
-					element.RemoveAttribute("label");
-				else
-					element.SetAttribute("label", value);
-			}
-		}
+        /// <summary>
+        /// A human-readable name for the field.
+        /// </summary>
+        public string Label
+        {
+            get
+            {
+                var v = Element.GetAttribute("label");
+                return string.IsNullOrEmpty(v) ? null : v;
+            }
 
-		/// <summary>
-		/// A natural-language description of the field, intended for presentation
-		/// in a user-agent.
-		/// </summary>
-		public string Description {
-			get {
-				if (element["desc"] != null)
-					return element["desc"].InnerText;
-				return null;
-			}
-			private set {
-				var e = element["desc"];
-				if (e != null) {
-					if (value == null)
-						element.RemoveChild(e);
-					else
-						e.InnerText = value;
-				} else {
-					if (value != null)
-						element.Child(Xml.Element("desc").Text(value));
-				}
-			}
-		}
+            private set
+            {
+                if (value == null)
+                    Element.RemoveAttribute("label");
+                else
+                    Element.SetAttribute("label", value);
+            }
+        }
 
-		/// <summary>
-		/// Determines whether the field is required to fill out, or optional.
-		/// </summary>
-		public bool Required {
-			get {
-				return element["required"] != null;
-			}
-			private set {
-				if (value == false) {
-					if (element["required"] != null)
-						element.RemoveChild(element["required"]);
-				} else {
-					if (element["required"] == null)
-						element.Child(Xml.Element("required"));
-				}
-			}
-		}
+        /// <summary>
+        /// A natural-language description of the field, intended for presentation
+        /// in a user-agent.
+        /// </summary>
+        public string Description
+        {
+            get
+            {
+                if (Element["desc"] != null)
+                    return Element["desc"].InnerText;
+                return null;
+            }
 
-		/// <summary>
-		/// The name of the field.
-		/// </summary>
-		public string Name {
-			get {
-				var v = element.GetAttribute("var");
-				return String.IsNullOrEmpty(v) ? null : v;
-			}
-			private set {
-				if (value == null)
-					element.RemoveAttribute("var");
-				else
-					element.SetAttribute("var", value);
-			}
-		}
+            private set
+            {
+                var e = Element["desc"];
+                if (e != null)
+                {
+                    if (value == null)
+                        Element.RemoveChild(e);
+                    else
+                        e.InnerText = value;
+                }
+                else
+                {
+                    if (value != null)
+                        Element.Child(Xml.Element("desc").Text(value));
+                }
+            }
+        }
 
-		/// <summary>
-		/// The type of the field or null if no type has been specified.
-		/// </summary>
-		/// <exception cref="XmlException">The 'type' attribute of the underlying
-		/// XML element is invalid.</exception>
-		public DataFieldType? Type {
-			get {
-				return GetDataFieldType();
-			}
-			private set {
-				SetType(value);
-			}
-		}
+        /// <summary>
+        /// Determines whether the field is required to fill out, or optional.
+        /// </summary>
+        public bool Required
+        {
+            get
+            {
+                return Element["required"] != null;
+            }
 
-		/// <summary>
-		/// Returns a textual XML representation of the data-field.
-		/// </summary>
-		/// <returns>A string containing the XML representation of the
-		/// data-field.</returns>
-		public override string ToString() {
-			return element.ToXmlString();
-		}
+            private set
+            {
+                if (value == false)
+                {
+                    if (Element["required"] != null)
+                        Element.RemoveChild(Element["required"]);
+                }
+                else
+                {
+                    if (Element["required"] == null)
+                        Element.Child(Xml.Element("required"));
+                }
+            }
+        }
 
-		/// <summary>
-		/// Returns an XmlElement instance representing the data-field.
-		/// </summary>
-		/// <returns>An XmlElement representing the data-field.</returns>
-		public XmlElement ToXmlElement() {
-			return element;
-		}
+        /// <summary>
+        /// The name of the field.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                var v = Element.GetAttribute("var");
+                return string.IsNullOrEmpty(v) ? null : v;
+            }
 
-		/// <summary>
-		/// Returns a collection of the data-field's values.
-		/// </summary>
-		public IEnumerable<string> Values {
-			get {
-				ISet<string> set = new HashSet<string>();
-				foreach (XmlElement e in element.GetElementsByTagName("value"))
-					set.Add(e.InnerText);
-				return set;
-			}
-		}
+            private set
+            {
+                if (value == null)
+                    Element.RemoveAttribute("var");
+                else
+                    Element.SetAttribute("var", value);
+            }
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the DataField class for use in a
-		/// requesting dataform.
-		/// </summary>
-		/// <param name="type">The type of the field.</param>
-		/// <param name="name">The name of the field.</param>
-		/// <param name="required">Determines whether the field is required or
-		/// optional.</param>
-		/// <param name="label">A human-readable name for the field.</param>
-		/// <param name="description">A natural-language description of the field,
-		/// intended for presentation in a user-agent.</param>
-		public DataField(DataFieldType type, string name = null, bool required = false,
-			string label = null, string description = null) {
-			element = Xml.Element("field");
-			Type = type;
-			Name = name;
-			Required = required;
-			Label = label;
-			Description = description;
-		}
+        /// <summary>
+        /// The type of the field or null if no type has been specified.
+        /// </summary>
+        /// <exception cref="XmlException">The 'type' attribute of the underlying
+        /// XML element is invalid.</exception>
+        public DataFieldType? Type
+        {
+            get
+            {
+                return GetDataFieldType();
+            }
 
-		/// <summary>
-		/// Initializes a new instance of the DataField class from the specified
-		/// XML element.
-		/// </summary>
-		/// <param name="element">The XML 'field' element to initialize the instance
-		/// with.</param>
-		/// <exception cref="ArgumentNullException">The element parameter is
-		/// null.</exception>
-		/// <exception cref="ArgumentException">The specified XML element is not a
-		/// valid data-field element.</exception>
-		internal DataField(XmlElement element) {
-			element.ThrowIfNull("element");
-			this.element = element;
-			try {
-				// Call GetDataFieldType method to verify the 'type' attribute.
-				GetDataFieldType();
-			} catch (XmlException e) {
-				throw new ArgumentException("The element parameter is not a valid " +
-					"data-field.", e);
-			}
-		}
+            private set
+            {
+                SetType(value);
+            }
+        }
 
-		/// <summary>
-		/// Asserts the data-field is of the specified type.
-		/// </summary>
-		/// <param name="expected">The type to assert.</param>
-		/// <exception cref="ArgumentException">The data-field is not of the
-		/// expected type.</exception>
-		protected void AssertType(DataFieldType expected) {
-			if (Type != expected) {
-				throw new ArgumentException("The specified XML element is not a " +
-					"data-field of type '" + expected.ToString() + "'.");
-			}
-		}
+        /// <summary>
+        /// Returns a textual XML representation of the data-field.
+        /// </summary>
+        /// <returns>A string containing the XML representation of the
+        /// data-field.</returns>
+        public override string ToString()
+        {
+            return Element.ToXmlString();
+        }
 
-		/// <summary>
-		/// Sets the type of the data-field to the specified value.
-		/// </summary>
-		/// <param name="type">The value to set the type of the data-field to. Can be
-		/// one of the values from the DataFieldType enumeration.</param>
-		void SetType(DataFieldType? type) {
-			if (!type.HasValue)
-				element.RemoveAttribute("type");
-			else {
-				string value = TypeToAttributeValue(type.Value);
-				element.SetAttribute("type", value);
-			}
-		}
+        /// <summary>
+        /// Returns an XmlElement instance representing the data-field.
+        /// </summary>
+        /// <returns>An XmlElement representing the data-field.</returns>
+        public XmlElement ToXmlElement()
+        {
+            return Element;
+        }
 
-		/// <summary>
-		/// Converts the specified value from the DataFieldType enumeration into
-		/// its respective textual representation.
-		/// </summary>
-		/// <param name="type">The value to convert into a string.</param>
-		/// <returns>A string representing the specified value.</returns>
-		string TypeToAttributeValue(DataFieldType type) {
-			StringBuilder b = new StringBuilder();
-			string s = type.ToString();
-			for (int i = 0; i < s.Length; i++) {
-				if (Char.IsUpper(s, i) && i > 0)
-					b.Append('-');
-				b.Append(Char.ToLower(s[i]));
-			}
-			return b.ToString();
-		}
+        /// <summary>
+        /// Returns a collection of the data-field's values.
+        /// </summary>
+        public IEnumerable<string> Values
+        {
+            get
+            {
+                ISet<string> set = new HashSet<string>();
+                foreach (XmlElement e in Element.GetElementsByTagName("value"))
+                    set.Add(e.InnerText);
+                return set;
+            }
+        }
 
-		/// <summary>
-		/// Converts the specified string into a value of the DataFieldType
-		/// enumeration.
-		/// </summary>
-		/// <param name="value">The string value to convert.</param>
-		/// <returns>An object of the DataFieldType enumeration whose value is
-		/// represented by value.</returns>
-		/// <exception cref="ArgumentNullException">The value parameter is
-		/// null.</exception>
-		/// <exception cref="ArgumentException">value is either an empty string
-		/// or only contains white space, or value is a name, but not one of
-		/// the named constants of the DataFieldType enumeration.</exception>
-		DataFieldType AttributeValueToType(string value) {
-			value.ThrowIfNull("value");
-			StringBuilder b = new StringBuilder();
-			string s = value;
-			for (int i = 0; i < s.Length; i++) {
-				if (s[i] == '-')
-					b.Append(Char.ToUpper(s[++i]));
-				else
-					b.Append(s[i]);
-			}
-			value = b.ToString();
-			return Util.ParseEnum<DataFieldType>(value);
-		}
+        /// <summary>
+        /// Initializes a new instance of the DataField class for use in a
+        /// requesting dataform.
+        /// </summary>
+        /// <param name="type">The type of the field.</param>
+        /// <param name="name">The name of the field.</param>
+        /// <param name="required">Determines whether the field is required or
+        /// optional.</param>
+        /// <param name="label">A human-readable name for the field.</param>
+        /// <param name="description">A natural-language description of the field,
+        /// intended for presentation in a user-agent.</param>
+        public DataField(DataFieldType type, string name = null, bool required = false,
+            string label = null, string description = null)
+        {
+            Element = Xml.Element("field");
+            Type = type;
+            Name = name;
+            Required = required;
+            Label = label;
+            Description = description;
+        }
 
-		/// <summary>
-		/// Returns the type of the data-field.
-		/// </summary>
-		/// <returns>The type of the data-field or null if no type has been
-		/// specified.</returns>
-		/// <exception cref="XmlException">The 'type' attribute of the underlying
-		/// XML element is invalid.</exception>
-		DataFieldType? GetDataFieldType() {
-			try {
-				string t = element.GetAttribute("type");
-				if (String.IsNullOrEmpty(t))
-					return null;
-				return AttributeValueToType(t);
-			} catch (Exception e) {
-				throw new XmlException("The 'type' attribute of the underlying " +
-					"XML element is invalid.", e);
-			}
-		}
-	}
+        /// <summary>
+        /// Initializes a new instance of the DataField class from the specified
+        /// XML element.
+        /// </summary>
+        /// <param name="element">The XML 'field' element to initialize the instance
+        /// with.</param>
+        /// <exception cref="ArgumentNullException">The element parameter is
+        /// null.</exception>
+        /// <exception cref="ArgumentException">The specified XML element is not a
+        /// valid data-field element.</exception>
+        internal DataField(XmlElement element)
+        {
+            element.ThrowIfNull("element");
+            this.Element = element;
+            try
+            {
+                // Call GetDataFieldType method to verify the 'type' attribute.
+                GetDataFieldType();
+            }
+            catch (XmlException e)
+            {
+                throw new ArgumentException("The element parameter is not a valid " +
+                    "data-field.", e);
+            }
+        }
+
+        /// <summary>
+        /// Asserts the data-field is of the specified type.
+        /// </summary>
+        /// <param name="expected">The type to assert.</param>
+        /// <exception cref="ArgumentException">The data-field is not of the
+        /// expected type.</exception>
+        protected void AssertType(DataFieldType expected)
+        {
+            if (Type != expected)
+            {
+                throw new ArgumentException("The specified XML element is not a " +
+                    "data-field of type '" + expected.ToString() + "'.");
+            }
+        }
+
+        /// <summary>
+        /// Sets the type of the data-field to the specified value.
+        /// </summary>
+        /// <param name="type">The value to set the type of the data-field to. Can be
+        /// one of the values from the DataFieldType enumeration.</param>
+        private void SetType(DataFieldType? type)
+        {
+            if (!type.HasValue)
+                Element.RemoveAttribute("type");
+            else
+            {
+                string value = TypeToAttributeValue(type.Value);
+                Element.SetAttribute("type", value);
+            }
+        }
+
+        /// <summary>
+        /// Converts the specified value from the DataFieldType enumeration into
+        /// its respective textual representation.
+        /// </summary>
+        /// <param name="type">The value to convert into a string.</param>
+        /// <returns>A string representing the specified value.</returns>
+        private string TypeToAttributeValue(DataFieldType type)
+        {
+            StringBuilder b = new StringBuilder();
+            string s = type.ToString();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (char.IsUpper(s, i) && i > 0)
+                    b.Append('-');
+                b.Append(char.ToLower(s[i]));
+            }
+            return b.ToString();
+        }
+
+        /// <summary>
+        /// Converts the specified string into a value of the DataFieldType
+        /// enumeration.
+        /// </summary>
+        /// <param name="value">The string value to convert.</param>
+        /// <returns>An object of the DataFieldType enumeration whose value is
+        /// represented by value.</returns>
+        /// <exception cref="ArgumentNullException">The value parameter is
+        /// null.</exception>
+        /// <exception cref="ArgumentException">value is either an empty string
+        /// or only contains white space, or value is a name, but not one of
+        /// the named constants of the DataFieldType enumeration.</exception>
+        private DataFieldType AttributeValueToType(string value)
+        {
+            value.ThrowIfNull("value");
+            StringBuilder b = new StringBuilder();
+            string s = value;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '-')
+                    b.Append(char.ToUpper(s[++i]));
+                else
+                    b.Append(s[i]);
+            }
+            value = b.ToString();
+            return Util.ParseEnum<DataFieldType>(value);
+        }
+
+        /// <summary>
+        /// Returns the type of the data-field.
+        /// </summary>
+        /// <returns>The type of the data-field or null if no type has been
+        /// specified.</returns>
+        /// <exception cref="XmlException">The 'type' attribute of the underlying
+        /// XML element is invalid.</exception>
+        private DataFieldType? GetDataFieldType()
+        {
+            try
+            {
+                string t = Element.GetAttribute("type");
+                if (string.IsNullOrEmpty(t))
+                    return null;
+                return AttributeValueToType(t);
+            }
+            catch (Exception e)
+            {
+                throw new XmlException("The 'type' attribute of the underlying " +
+                    "XML element is invalid.", e);
+            }
+        }
+    }
 }

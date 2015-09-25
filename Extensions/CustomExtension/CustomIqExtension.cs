@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-
 namespace Sharp.Xmpp.Extensions
 {
     /// <summary>
@@ -13,57 +12,63 @@ namespace Sharp.Xmpp.Extensions
     internal class CustomIqExtension : XmppExtension, IInputFilter<Iq>
     {
         /// <summary>
-		/// A reference to the 'Entity Capabilities' extension instance.
-		/// </summary>
-		EntityCapabilities ecapa;
+        /// A reference to the 'Entity Capabilities' extension instance.
+        /// </summary>
+        private EntityCapabilities ecapa;
 
-		/// <summary>
-		/// An enumerable collection of XMPP namespaces the extension implements.
-		/// </summary>
-		/// <remarks>This is used for compiling the list of supported extensions
-		/// advertised by the 'Service Discovery' extension.</remarks>
-		public override IEnumerable<string> Namespaces {
-			get {
-				return new string[] { "urn:sharp.xmpp:customiq" };
-			}
-		}
+        /// <summary>
+        /// An enumerable collection of XMPP namespaces the extension implements.
+        /// </summary>
+        /// <remarks>This is used for compiling the list of supported extensions
+        /// advertised by the 'Service Discovery' extension.</remarks>
+        public override IEnumerable<string> Namespaces
+        {
+            get
+            {
+                return new string[] { "urn:sharp.xmpp:customiq" };
+            }
+        }
 
-		/// <summary>
-		/// The named constant of the Extension enumeration that corresponds to this
-		/// extension.
-		/// </summary>
-		public override Extension Xep {
-			get {
-				return Extension.CustomIqExtension;
-			}
-		}
+        /// <summary>
+        /// The named constant of the Extension enumeration that corresponds to this
+        /// extension.
+        /// </summary>
+        public override Extension Xep
+        {
+            get
+            {
+                return Extension.CustomIqExtension;
+            }
+        }
 
-		/// <summary>
-		/// Invoked after all extensions have been loaded.
-		/// </summary>
-		public override void Initialize() {
-			ecapa = im.GetExtension<EntityCapabilities>();
-		}
+        /// <summary>
+        /// Invoked after all extensions have been loaded.
+        /// </summary>
+        public override void Initialize()
+        {
+            ecapa = IM.GetExtension<EntityCapabilities>();
+        }
 
-		/// <summary>
-		/// Invoked when an IQ stanza is being received.
-        /// If the Iq is correctly received a Result response is included 
+        /// <summary>
+        /// Invoked when an IQ stanza is being received.
+        /// If the Iq is correctly received a Result response is included
         /// with extension specific metadata included.
         /// If the Iq is not correctly received an error is returned
         /// Semantics of error on the response refer only to the XMPP level
         /// and not the application specific level
-		/// </summary>
-		/// <param name="stanza">The stanza which is being received.</param>
-		/// <returns>true to intercept the stanza or false to pass the stanza
-		/// on to the next handler.</returns>
-		public bool Input(Iq stanza) {
-            string response=null;
-			//if (stanza.Type != IqType.Get)
-			//	return false;
+        /// </summary>
+        /// <param name="stanza">The stanza which is being received.</param>
+        /// <returns>true to intercept the stanza or false to pass the stanza
+        /// on to the next handler.</returns>
+        public bool Input(Iq stanza)
+        {
+            string response = null;
+            //if (stanza.Type != IqType.Get)
+            //    return false;
             //get,set, result are supported
-			var customIqStanza = stanza.Data["customiq"];
-			if (customIqStanza == null || customIqStanza.NamespaceURI != "urn:sharp.xmpp:customiq")
-				return false;
+            var customIqStanza = stanza.Data["customiq"];
+            if (customIqStanza == null || customIqStanza.NamespaceURI != "urn:sharp.xmpp:customiq")
+                return false;
             //Result indicates that the request has been received.
             //It has not to do with the semantics of the message
             XmlElement query = stanza.Data["customiq"];
@@ -71,48 +76,45 @@ namespace Sharp.Xmpp.Extensions
             XmlDocument targetDocument = new XmlDocument();
 
             CopyNodes(targetDocument, targetDocument, query.FirstChild);
-            
 
             var xmlresponse = Xml.Element("customiq", "urn:sharp.xmpp:customiq");
             try
             {
                 //call the callback for receiving a relevant stanza
                 //and wait for answer in order provide it
-                response = im.CustomIqDelegate.Invoke(stanza.From, targetDocument.InnerXml);
+                response = IM.CustomIqDelegate.Invoke(stanza.From, targetDocument.InnerXml);
 
                 if (response != null && response != "")
                 {
                     xmlresponse.Text(response);
-                }     
-                im.IqResult(stanza, xmlresponse);
+                }
+                IM.IqResult(stanza, xmlresponse);
             }
             catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("Send back an error response" + e.StackTrace + e.ToString());
                 // Send back an error response in case the callback method threw
                 // an exception.
-                im.IqError(stanza, ErrorType.Modify, ErrorCondition.BadRequest);
+                IM.IqError(stanza, ErrorType.Modify, ErrorCondition.BadRequest);
             }
-           
-           
-			// We took care of this IQ request, so intercept it and don't pass it
-			// on to other handlers.
+
+            // We took care of this IQ request, so intercept it and don't pass it
+            // on to other handlers.
             //Also send a void acknowledgement
-			return true;
-		}
+            return true;
+        }
 
-            public void CopyNodes( XmlDocument targetDocument, XmlNode targetNode, XmlNode source ) {
-                XmlNode targetChildNode = targetDocument.CreateNode(source.NodeType, source.Name, "");
-                 if ( !source.HasChildNodes )
-                     targetChildNode.InnerText = source.InnerText;
-                 targetNode.AppendChild(targetChildNode);
-                 foreach (XmlNode childNode in source.ChildNodes)
-                 {
-                     CopyNodes(targetDocument, targetChildNode, childNode);
-                 }
-           }
-
-
+        public void CopyNodes(XmlDocument targetDocument, XmlNode targetNode, XmlNode source)
+        {
+            XmlNode targetChildNode = targetDocument.CreateNode(source.NodeType, source.Name, "");
+            if (!source.HasChildNodes)
+                targetChildNode.InnerText = source.InnerText;
+            targetNode.AppendChild(targetChildNode);
+            foreach (XmlNode childNode in source.ChildNodes)
+            {
+                CopyNodes(targetDocument, targetChildNode, childNode);
+            }
+        }
 
         /// <summary>
         /// Requests the XMPP entity with the specified JID a GET command.
@@ -120,6 +122,7 @@ namespace Sharp.Xmpp.Extensions
         /// if fires the callback function
         /// </summary>
         /// <param name="jid">The JID of the XMPP entity to get.</param>
+        /// <param name="request">The payload of the request</param>
         /// <exception cref="ArgumentNullException">The jid parameter
         /// is null.</exception>
         /// <exception cref="NotSupportedException">The XMPP entity with
@@ -131,7 +134,6 @@ namespace Sharp.Xmpp.Extensions
         /// unspecified XMPP error occurred.</exception>
         public void RequestCustomIqAsync(Jid jid, string request)
         {
-
             jid.ThrowIfNull("jid");
             request.ThrowIfNull("str");
 
@@ -156,10 +158,9 @@ namespace Sharp.Xmpp.Extensions
             //   si.Child(data);
 
             //The Request is Async
-            im.IqRequestAsync(IqType.Get, jid, im.Jid, xml, null);
+            IM.IqRequestAsync(IqType.Get, jid, IM.Jid, xml, null);
+        }
 
-         }
-            
         //    jid.ThrowIfNull("jid");
         //    request.ThrowIfNull("str");
 
@@ -186,7 +187,6 @@ namespace Sharp.Xmpp.Extensions
         //    //The Request is Async
         //    im.IqRequestAsync(IqType.Get, jid, im.Jid, xml, null, (id, iq) =>
         //    {
-
         //        if (iq.Type == IqType.Error)
         //            throw Util.ExceptionFromError(iq, "Response to RequestCustomIqAsync with an error");
         //        if (iq.Type == IqType.Result)
@@ -209,24 +209,22 @@ namespace Sharp.Xmpp.Extensions
         //            catch (Exception e)
         //            {
         //                System.Diagnostics.Debug.WriteLine("Not correctly formated response to RequestCustomIqAsync" + e.StackTrace + e.ToString());
-        //                throw Util.ExceptionFromError(iq, "Not correctly formated response to RequestCustomIqAsync, "+e.Message);                      
+        //                throw Util.ExceptionFromError(iq, "Not correctly formated response to RequestCustomIqAsync, "+e.Message);
 
-        //            }                    
-        //        }               
-        //    });               
-                         
+        //            }
+        //        }
+        //    });
 
-        //}	
-	
- 
+        //}
 
-		/// <summary>
-		/// Initializes a new instance of the Ping class.
-		/// </summary>
-		/// <param name="im">A reference to the XmppIm instance on whose behalf this
-		/// instance is created.</param>
-		public CustomIqExtension(XmppIm im)
-			: base(im) {
-		}
+        /// <summary>
+        /// Initializes a new instance of the Ping class.
+        /// </summary>
+        /// <param name="im">A reference to the XmppIm instance on whose behalf this
+        /// instance is created.</param>
+        public CustomIqExtension(XmppIm im)
+            : base(im)
+        {
+        }
     }
 }

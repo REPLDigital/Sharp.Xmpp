@@ -2,15 +2,12 @@
 using Sharp.Xmpp.Im;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sharp.Xmpp.Extensions
 {
-    internal class MessageCarbons: XmppExtension
+    internal class MessageCarbons : XmppExtension
     {
-        static readonly string[] _namespaces = { "urn:xmpp:carbons:2" };
+        private static readonly string[] _namespaces = { "urn:xmpp:carbons:2" };
         private EntityCapabilities ecapa;
 
         public override IEnumerable<string> Namespaces
@@ -25,17 +22,17 @@ namespace Sharp.Xmpp.Extensions
 
         public override void Initialize()
         {
-            ecapa = im.GetExtension<EntityCapabilities>();
+            ecapa = IM.GetExtension<EntityCapabilities>();
         }
 
         public void EnableCarbons(bool enable = true)
         {
-            if (!ecapa.Supports(im.Jid.Domain, Extension.MessageCarbons))
+            if (!ecapa.Supports(IM.Jid.Domain, Extension.MessageCarbons))
             {
                 throw new NotSupportedException("The XMPP server does not support " +
                     "the 'Message Carbons' extension.");
             }
-            var iq = im.IqRequest(IqType.Set, null, im.Jid,
+            var iq = IM.IqRequest(IqType.Set, null, IM.Jid,
                 Xml.Element(enable ? "enable" : "disable", _namespaces[0]));
             if (iq.Type == IqType.Error)
                 throw Util.ExceptionFromError(iq, "Message Carbons could not " +
@@ -45,7 +42,6 @@ namespace Sharp.Xmpp.Extensions
         public MessageCarbons(XmppIm im) :
             base(im)
         {
-            ;
         }
     }
 }
