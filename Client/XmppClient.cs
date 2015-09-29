@@ -1547,13 +1547,13 @@ namespace Sharp.Xmpp.Client
         ///
         /// If only 'end' is specified then all collections prior to that date should be returned.
         /// </summary>
-        /// <param name="max">Maximum number of items to fetch</param>
+        /// <param name="setRequest">Paging options</param>
         /// <param name="start">Optional start date range to query</param>
         /// <param name="end">Optional enddate range to query</param>
         /// <param name="with">Optional JID to filter archive results by</param>
-        public void GetArchive(int max, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
+        public XmppPage<ArchivedChatId> GetArchivedChatIds(XmppPageRequest setRequest, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
         {
-            messageArchiving.GetArchive(max, start, end, with);
+            return messageArchiving.GetArchivedChatIds(setRequest, start, end, with);
         }
 
         /// <summary>

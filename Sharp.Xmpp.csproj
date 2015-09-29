@@ -96,6 +96,8 @@
     <Compile Include="Extensions\XEP-0004\Dataforms\XmlCollection.cs" />
     <Compile Include="Extensions\XEP-0020\FeatureNegotiation.cs" />
     <Compile Include="Extensions\XEP-0030\Item.cs" />
+    <Compile Include="Extensions\XEP-0059\XmppPage.cs" />
+    <Compile Include="Extensions\XEP-0059\XmppPageRequest.cs" />
     <Compile Include="Extensions\XEP-0065\IPAddressExtensions.cs" />
     <Compile Include="Extensions\XEP-0065\Socks5Bytestreams.cs" />
     <Compile Include="Extensions\XEP-0065\Socks5\ATyp.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Extensions\XEP-0118\TuneEventArgs.cs" />
     <Compile Include="Extensions\XEP-0118\TuneInformation.cs" />
     <Compile Include="Extensions\XEP-0118\UserTune.cs" />
+    <Compile Include="Extensions\XEP-0136\ArchivedChatId.cs" />
     <Compile Include="Extensions\XEP-0136\MessageArchiving.cs" />
     <Compile Include="Extensions\XEP-0153\vCardAvatars.cs" />
     <Compile Include="Extensions\XEP-0163\Pep.cs" />

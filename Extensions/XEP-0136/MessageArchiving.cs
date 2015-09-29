@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Sharp.Xmpp.Extensions
 {
@@ -30,7 +31,39 @@ namespace Sharp.Xmpp.Extensions
         {
         }
 
-        public Task GetArchive(int max, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
+        private static IList<ArchivedChatId> GetChatIdsFromStanza(XmlElement xml)
+        {
+            List<ArchivedChatId> chats = new List<ArchivedChatId>();
+            var chatNodes = xml.GetElementsByTagName("chat");
+
+            foreach (XmlNode node in chatNodes)
+            {
+                string with = null;
+                try
+                {
+                    with = node.Attributes["with"].InnerText;
+                }
+                catch
+                {
+                }
+
+                DateTimeOffset start = default(DateTimeOffset);
+                try
+                {
+                    string startText = node.Attributes["start"].InnerText;
+                    start = DateTimeProfiles.FromXmppString(startText);
+                }
+                catch
+                {
+                }
+
+                chats.Add(new ArchivedChatId(with, start));
+            }
+
+            return chats;
+        }
+
+        public XmppPage<ArchivedChatId> GetArchivedChatIds(XmppPageRequest setRequest, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
         {
             var request = Xml.Element("list", xmlns);
 
@@ -49,14 +82,17 @@ namespace Sharp.Xmpp.Extensions
                 request.Attr("end", end.Value.ToXmppDateTimeString());
             }
 
-            var maxNode = Xml.Element("max").Text(max.ToString());
-            var setNode = Xml.Element("set", "http://jabber.org/protocol/rsm").Child(maxNode);
-
+            var setNode = setRequest.ToXmlElement();
             request.Child(setNode);
 
             var response = IM.IqRequest(IqType.Get, null, null, request);
 
-            return Task.FromResult(true);
+            if (response.Type == IqType.Error)
+            {
+                throw Util.ExceptionFromError(response, "Failed to get archived chat ids");
+            }
+
+            return new XmppPage<ArchivedChatId>(response.Data["list"], GetChatIdsFromStanza);
         }
     }
 }
