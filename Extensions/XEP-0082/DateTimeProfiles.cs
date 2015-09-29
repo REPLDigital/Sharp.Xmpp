@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,6 +88,16 @@ namespace Sharp.Xmpp.Extensions
         public static string ToXmppDateTimeString(this DateTimeOffset dt)
         {
             return dt.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ss.fffZ");
+        }
+
+        /// <summary>
+        /// Create a DateTimeOffset from an XEP-0082 string
+        /// </summary>
+        public static DateTimeOffset FromXmppString(string dt)
+        {
+            dt.ThrowIfNullOrEmpty("dt");
+
+            return DateTimeOffset.Parse(dt, null, DateTimeStyles.AdjustToUniversal | DateTimeStyles.RoundtripKind);
         }
     }
 }
