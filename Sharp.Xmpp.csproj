@@ -153,7 +153,10 @@
     <Compile Include="Extensions\XEP-0118\TuneEventArgs.cs" />
     <Compile Include="Extensions\XEP-0118\TuneInformation.cs" />
     <Compile Include="Extensions\XEP-0118\UserTune.cs" />
+    <Compile Include="Extensions\XEP-0136\ArchivedChat.cs" />
     <Compile Include="Extensions\XEP-0136\ArchivedChatId.cs" />
+    <Compile Include="Extensions\XEP-0136\ArchivedMessage.cs" />
+    <Compile Include="Extensions\XEP-0136\ArchivedMessageType.cs" />
     <Compile Include="Extensions\XEP-0136\MessageArchiving.cs" />
     <Compile Include="Extensions\XEP-0153\vCardAvatars.cs" />
     <Compile Include="Extensions\XEP-0163\Pep.cs" />

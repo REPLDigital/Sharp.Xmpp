@@ -63,8 +63,25 @@ namespace Sharp.Xmpp.Extensions
             return chats;
         }
 
-        public XmppPage<ArchivedChatId> GetArchivedChatIds(XmppPageRequest setRequest, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
+        /// <summary>
+        /// Fetch message history from the server.
+        ///
+        /// The 'start' and 'end' attributes MAY be specified to indicate a date range.
+        ///
+        /// If the 'with' attribute is omitted then collections with any JID are returned.
+        ///
+        /// If only 'start' is specified then all collections on or after that date should be returned.
+        ///
+        /// If only 'end' is specified then all collections prior to that date should be returned.
+        /// </summary>
+        /// <param name="pageRequest">Paging options</param>
+        /// <param name="start">Optional start date range to query</param>
+        /// <param name="end">Optional enddate range to query</param>
+        /// <param name="with">Optional JID to filter archive results by</param>
+        public XmppPage<ArchivedChatId> GetArchivedChatIds(XmppPageRequest pageRequest, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
         {
+            pageRequest.ThrowIfNull();
+
             var request = Xml.Element("list", xmlns);
 
             if (with != null)
@@ -82,7 +99,7 @@ namespace Sharp.Xmpp.Extensions
                 request.Attr("end", end.Value.ToXmppDateTimeString());
             }
 
-            var setNode = setRequest.ToXmlElement();
+            var setNode = pageRequest.ToXmlElement();
             request.Child(setNode);
 
             var response = IM.IqRequest(IqType.Get, null, null, request);
@@ -93,6 +110,44 @@ namespace Sharp.Xmpp.Extensions
             }
 
             return new XmppPage<ArchivedChatId>(response.Data["list"], GetChatIdsFromStanza);
+        }
+
+        /// <summary>
+        /// Fetch a page of archived messages from a chat
+        /// </summary>
+        /// <param name="pageRequest">Paging options</param>
+        /// <param name="chatId">The id of the chat</param>
+        public ArchivedChatPage GetArchivedChat(XmppPageRequest pageRequest, ArchivedChatId chatId)
+        {
+            return GetArchivedChat(pageRequest, chatId.With, chatId.Start);
+        }
+
+        /// <summary>
+        /// Fetch a page of archived messages from a chat
+        /// </summary>
+        /// <param name="pageRequest">Paging options</param>
+        /// <param name="with">The id of the entity that the chat was with</param>
+        /// <param name="start">The start time of the chat</param>
+        public ArchivedChatPage GetArchivedChat(XmppPageRequest pageRequest, Jid with, DateTimeOffset start)
+        {
+            pageRequest.ThrowIfNull();
+            with.ThrowIfNull();
+
+            var request = Xml.Element("retrieve", xmlns);
+            request.Attr("with", with.ToString());
+            request.Attr("start", start.ToXmppDateTimeString());
+
+            var setNode = pageRequest.ToXmlElement();
+            request.Child(setNode);
+
+            var response = IM.IqRequest(IqType.Get, null, null, request);
+
+            if (response.Type == IqType.Error)
+            {
+                throw Util.ExceptionFromError(response, "Failed to get archived chat messages");
+            }
+
+            return new ArchivedChatPage(response.Data["chat"]);
         }
     }
 }

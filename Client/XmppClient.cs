@@ -1547,13 +1547,34 @@ namespace Sharp.Xmpp.Client
         ///
         /// If only 'end' is specified then all collections prior to that date should be returned.
         /// </summary>
-        /// <param name="setRequest">Paging options</param>
+        /// <param name="pageRequest">Paging options</param>
         /// <param name="start">Optional start date range to query</param>
         /// <param name="end">Optional enddate range to query</param>
         /// <param name="with">Optional JID to filter archive results by</param>
-        public XmppPage<ArchivedChatId> GetArchivedChatIds(XmppPageRequest setRequest, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
+        public XmppPage<ArchivedChatId> GetArchivedChatIds(XmppPageRequest pageRequest, DateTimeOffset? start = null, DateTimeOffset? end = null, Jid with = null)
         {
-            return messageArchiving.GetArchivedChatIds(setRequest, start, end, with);
+            return messageArchiving.GetArchivedChatIds(pageRequest, start, end, with);
+        }
+
+        /// <summary>
+        /// Fetch a page of archived messages from a chat
+        /// </summary>
+        /// <param name="pageRequest">Paging options</param>
+        /// <param name="with">The id of the entity that the chat was with</param>
+        /// <param name="start">The start time of the chat</param>
+        public ArchivedChatPage GetArchivedChat(XmppPageRequest pageRequest, Jid with, DateTimeOffset start)
+        {
+            return messageArchiving.GetArchivedChat(pageRequest, with, start);
+        }
+
+        /// <summary>
+        /// Fetch a page of archived messages from a chat
+        /// </summary>
+        /// <param name="pageRequest">Paging options</param>
+        /// <param name="chatId">The id of the chat</param>
+        public ArchivedChatPage GetArchivedChat(XmppPageRequest pageRequest, ArchivedChatId chatId)
+        {
+            return messageArchiving.GetArchivedChat(pageRequest, chatId);
         }
 
         /// <summary>

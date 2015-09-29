@@ -36,7 +36,10 @@ namespace Sharp.Xmpp.Extensions
         /// <summary>
         /// The total number of items in this page
         /// </summary>
-        public int PageCount { get { return Items.Count; } }
+        public int PageCount
+        {
+            get { return Items.Count; }
+        }
 
         /// <summary>
         /// Enumerator for items in this page

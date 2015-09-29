@@ -45,7 +45,7 @@ namespace Sharp.Xmpp.Extensions
                 dt = dt.ToUniversalTime();
             }
 
-            return dt.ToString("hh:mm:ss.fffZ");
+            return dt.ToString("HH:mm:ss.fffZ");
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Sharp.Xmpp.Extensions
                 dt = dt.ToUniversalTime();
             }
 
-            return dt.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
+            return dt.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Sharp.Xmpp.Extensions
         /// </summary>
         public static string ToXmppTimeString(this DateTimeOffset dt)
         {
-            return dt.ToUniversalTime().ToString("hh:mm:ss.fff");
+            return dt.ToUniversalTime().ToString("HH:mm:ss.fff");
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Sharp.Xmpp.Extensions
         /// </summary>
         public static string ToXmppDateTimeString(this DateTimeOffset dt)
         {
-            return dt.ToUniversalTime().ToString("yyyy-MM-ddThh:mm:ss.fffZ");
+            return dt.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
         }
 
         /// <summary>
