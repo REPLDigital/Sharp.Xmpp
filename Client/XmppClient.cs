@@ -1577,9 +1577,12 @@ namespace Sharp.Xmpp.Client
         /// Fetch a page of archived messages
         /// </summary>
         /// <param name="pageRequest">Paging options</param>
-        public Task<XmppPage<Message>> GetArchivedMessages(XmppPageRequest pageRequest)
+        /// <param name="with">Optional filter to only return messages if they match the supplied JID</param>
+        /// <param name="start">Optional filter to only return messages whose timestamp is equal to or later than the given timestamp.</param>
+        /// <param name="end">Optional filter to only return messages whose timestamp is equal to or earlier than the timestamp given in the 'end' field.</param>
+        public Task<XmppPage<Message>> GetArchivedMessages(XmppPageRequest pageRequest, Jid with = null, DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
-            return messageArchiveManagement.GetArchivedMessages(pageRequest);
+            return messageArchiveManagement.GetArchivedMessages(pageRequest, with, start, end);
         }
 
         /// <summary>
