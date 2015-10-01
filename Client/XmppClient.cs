@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Security;
+using System.Threading.Tasks;
 
 namespace Sharp.Xmpp.Client
 {
@@ -34,6 +35,11 @@ namespace Sharp.Xmpp.Client
         /// Provides access to the 'Message Archiving' XMPP extension functionality.
         /// </summary>
         private MessageArchiving messageArchiving;
+
+        /// <summary>
+        /// Provices access to the 'Message Archive management' XMPP extension functionality.
+        /// </summary>
+        private MessageArchiveManagement messageArchiveManagement;
 
         /// <summary>
         /// Provides access to the 'Software Version' XMPP extension functionality.
@@ -1568,6 +1574,15 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// Fetch a page of archived messages
+        /// </summary>
+        /// <param name="pageRequest">Paging options</param>
+        public Task<XmppPage<Message>> GetArchivedMessages(XmppPageRequest pageRequest)
+        {
+            return messageArchiveManagement.GetArchivedMessages(pageRequest);
+        }
+
+        /// <summary>
         /// Fetch a page of archived messages from a chat
         /// </summary>
         /// <param name="pageRequest">Paging options</param>
@@ -1790,6 +1805,7 @@ namespace Sharp.Xmpp.Client
             vcardAvatars = im.LoadExtension<VCardAvatars>();
             cusiqextension = im.LoadExtension<CustomIqExtension>();
             messageArchiving = im.LoadExtension<MessageArchiving>();
+            messageArchiveManagement = im.LoadExtension<MessageArchiveManagement>();
         }
     }
 }

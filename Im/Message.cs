@@ -183,7 +183,7 @@ namespace Sharp.Xmpp.Im
             Body = body;
             Subject = subject;
             Thread = thread;
-            Timestamp = GetDelayedTimestampOrNow(Element);
+            Timestamp = DelayedDelivery.GetDelayedTimestampOrNow(Element);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Sharp.Xmpp.Im
                     AlternateSubjects.Add(pair.Key, pair.Value);
             }
             Thread = thread;
-            Timestamp = GetDelayedTimestampOrNow(Element);
+            Timestamp = DelayedDelivery.GetDelayedTimestampOrNow(Element);
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace Sharp.Xmpp.Im
         /// <exception cref="ArgumentException">The 'type' attribute of
         /// the specified message stanza is invalid.</exception>
         internal Message(Core.Message message)
-            : this(message.Data, GetDelayedTimestampOrNow(message.Data))
+            : this(message.Data, DelayedDelivery.GetDelayedTimestampOrNow(message.Data))
         {
         }
 
@@ -247,7 +247,7 @@ namespace Sharp.Xmpp.Im
         /// <exception cref="ArgumentNullException">The message parameter is null.</exception>
         /// <exception cref="ArgumentException">The 'type' attribute of
         /// the specified message stanza is invalid.</exception>
-        private Message(XmlElement messageNode, DateTimeOffset timestamp)
+        internal Message(XmlElement messageNode, DateTimeOffset timestamp)
         {
             messageNode.ThrowIfNull("messageNode");
             type = ParseType(messageNode.GetAttribute("type"));
@@ -259,7 +259,7 @@ namespace Sharp.Xmpp.Im
             var forwardedMessageNode = Element["forwarded"];
             if (forwardedMessageNode != null && forwardedMessageNode.NamespaceURI == "urn:xmpp:forward:0")
             {
-                var forwardedTimestamp = GetDelayedTimestampOrNow(forwardedMessageNode);
+                var forwardedTimestamp = DelayedDelivery.GetDelayedTimestampOrNow(forwardedMessageNode);
                 ForwardedMessage = new Message(forwardedMessageNode["message"], forwardedTimestamp);
             }
         }
@@ -296,20 +296,6 @@ namespace Sharp.Xmpp.Im
                     return e;
             }
             return null;
-        }
-
-        private static DateTimeOffset GetDelayedTimestampOrNow(XmlElement xml)
-        {
-            DateTimeOffset timestamp = DateTimeOffset.UtcNow;
-
-            // Refer to XEP-0203.
-            var delay = xml["delay"];
-            if (delay != null && delay.NamespaceURI == "urn:xmpp:delay")
-            {
-                timestamp = DateTimeProfiles.FromXmppString(delay.InnerText);
-            }
-
-            return timestamp;
         }
     }
 }
