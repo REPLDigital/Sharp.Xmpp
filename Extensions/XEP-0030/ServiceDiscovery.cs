@@ -255,17 +255,31 @@ namespace Sharp.Xmpp.Extensions
             var query = iq.Data["query"];
             if (query == null || query.NamespaceURI != "http://jabber.org/protocol/disco#info")
                 throw new NotSupportedException("Erroneous response: " + iq);
-            ISet<string> ns = new HashSet<string>();
-            foreach (XmlElement e in query.GetElementsByTagName("feature"))
-                ns.Add(e.GetAttribute("var"));
+
+            Dictionary<string, Extension> supportedExtensions = new Dictionary<string, Extension>();
+            foreach (XmppExtension ext in IM.Extensions)
+            {
+                foreach (string ns in ext.Namespaces)
+                {
+                    supportedExtensions.Add(ns, ext.Xep);
+                }
+            }
+
             // Go through each extension we support and see if the entity supports
             // all of the extension's namespaces.
             ISet<Extension> feats = new HashSet<Extension>();
-            foreach (XmppExtension ext in IM.Extensions)
+
+            foreach (XmlElement e in query.GetElementsByTagName("feature"))
             {
-                if (ns.IsSupersetOf(ext.Namespaces))
-                    feats.Add(ext.Xep);
+                string ns = e.GetAttribute("var");
+
+                Extension xep = default(Extension);
+                if (supportedExtensions.TryGetValue(ns, out xep))
+                {
+                    feats.Add(xep);
+                }
             }
+
             return feats;
         }
 
