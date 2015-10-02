@@ -282,9 +282,9 @@ namespace Sharp.Xmpp.Extensions.Dataforms
         /// <param name="type">The type of the value to add</param>
         /// <param name="value">The value to add</param>
         /// <returns>This data form</returns>
-        public DataForm AddTypedValue(string name, string type, object value)
+        public DataForm AddValue(string name, DataFieldType type, object value)
         {
-            Element.Child(Xml.Element("field", xmlns).Attr("var", name).Attr("type", type).Child(Xml.Element("value", xmlns).Text(value.ToString())));
+            Element.Child(Xml.Element("field", xmlns).Attr("var", name).Attr("type", type.ToString()).Child(Xml.Element("value", xmlns).Text(value.ToString())));
 
             return this;
         }

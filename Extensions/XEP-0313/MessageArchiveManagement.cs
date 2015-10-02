@@ -76,7 +76,7 @@ namespace Sharp.Xmpp.Extensions
             {
                 var filterForm = new SubmitForm();
 
-                filterForm.AddTypedValue("FORM_TYPE", "hidden", xmlns);
+                filterForm.AddValue("FORM_TYPE", DataFieldType.Hidden, xmlns);
 
                 if (with != null)
                 {
