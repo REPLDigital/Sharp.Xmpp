@@ -1,4 +1,5 @@
-﻿using Sharp.Xmpp.Im;
+﻿using Sharp.Xmpp.Extensions.Dataforms;
+using Sharp.Xmpp.Im;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -60,13 +61,40 @@ namespace Sharp.Xmpp.Extensions
         /// Fetch a page of archived messages
         /// </summary>
         /// <param name="pageRequest">Paging options</param>
-        public Task<XmppPage<Message>> GetArchivedMessages(XmppPageRequest pageRequest)
+        /// <param name="with">Optional filter to only return messages if they match the supplied JID</param>
+        /// <param name="start">Optional filter to only return messages whose timestamp is equal to or later than the given timestamp.</param>
+        /// <param name="end">Optional filter to only return messages whose timestamp is equal to or earlier than the timestamp given in the 'end' field.</param>
+        public Task<XmppPage<Message>> GetArchivedMessages(XmppPageRequest pageRequest, Jid with = null, DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             string queryId = Guid.NewGuid().ToString().Replace("-", "");
 
             var request = Xml.Element("query", xmlns)
                 .Attr("queryid", queryId)
                 .Child(pageRequest.ToXmlElement());
+
+            if (with != null || start != null || end != null)
+            {
+                var filterForm = new SubmitForm();
+
+                filterForm.AddValue("FORM_TYPE", DataFieldType.Hidden, xmlns);
+
+                if (with != null)
+                {
+                    filterForm.AddUntypedValue("with", with);
+                }
+
+                if (start != null)
+                {
+                    filterForm.AddUntypedValue("start", DateTimeProfiles.ToXmppDateTimeString(start.Value));
+                }
+
+                if (end != null)
+                {
+                    filterForm.AddUntypedValue("end", DateTimeProfiles.ToXmppDateTimeString(end.Value));
+                }
+
+                request.Child(filterForm.ToXmlElement());
+            }
 
             var tcs = new TaskCompletionSource<XmppPage<Message>>();
             var queryTask = pendingQueries[queryId] = new ArchiveQueryTask(tcs);

@@ -14,6 +14,8 @@ namespace Sharp.Xmpp.Extensions.Dataforms
     /// typed data-fields impossible.</remarks>
     public class DataField
     {
+        private const string xmlns = "jabber:x:data";
+
         /// <summary>
         /// The underlying XML element representing the data-field.
         /// </summary>
@@ -69,7 +71,7 @@ namespace Sharp.Xmpp.Extensions.Dataforms
                 else
                 {
                     if (value != null)
-                        Element.Child(Xml.Element("desc").Text(value));
+                        Element.Child(Xml.Element("desc", xmlns).Text(value));
                 }
             }
         }
@@ -94,7 +96,7 @@ namespace Sharp.Xmpp.Extensions.Dataforms
                 else
                 {
                     if (Element["required"] == null)
-                        Element.Child(Xml.Element("required"));
+                        Element.Child(Xml.Element("required", xmlns));
                 }
             }
         }
@@ -184,7 +186,7 @@ namespace Sharp.Xmpp.Extensions.Dataforms
         public DataField(DataFieldType type, string name = null, bool required = false,
             string label = null, string description = null)
         {
-            Element = Xml.Element("field");
+            Element = Xml.Element("field", xmlns);
             Type = type;
             Name = name;
             Required = required;
