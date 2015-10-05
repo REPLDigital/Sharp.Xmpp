@@ -164,6 +164,12 @@
         /// An extension to record conversations that take place on clients that do not support local history storage, to synchronise conversation history seamlessly between multiple clients, to read the history of a MUC room, or to view old items in a pubsub node.
         /// </summary>
         /// <remarks>Defined in XEP-0313.</remarks>
-        MessageArchiveManagement
+        MessageArchiveManagement,
+
+        /// <summary>
+        /// An extension whereby multiple XMPP users can exchange messages in the context of a room or channel, similar to Internet Relay Chat (IRC).
+        /// </summary>
+        /// <remarks>Defined in XEP-0045.</remarks>
+        MultiUserChat,
     }
 }

@@ -32,6 +32,11 @@ namespace Sharp.Xmpp.Client
         private XmppIm im;
 
         /// <summary>
+        /// Provices access to the 'Multi-User Chat' XMPP extension functionality
+        /// </summary>
+        private MultiUserChat multiUserChat;
+
+        /// <summary>
         /// Provides access to the 'Message Archiving' XMPP extension functionality.
         /// </summary>
         private MessageArchiving messageArchiving;
@@ -1668,6 +1673,23 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// Get a list of multi-user chat services that are hosted on the server
+        /// </summary>
+        public IList<Jid> GetMucServices()
+        {
+            return multiUserChat.GetMucServices();
+        }
+
+        /// <summary>
+        /// Get a list of multi-user chat rooms that are available on a service
+        /// </summary>
+        /// <param name="mucService">The Jid of the multi-user chat service to query</param>
+        public IList<XmppItem> GetRooms(Jid mucService)
+        {
+            return multiUserChat.GetRooms(mucService);
+        }
+
+        /// <summary>
         /// Returns an enumerable collection of blocked contacts.
         /// </summary>
         /// <returns>An enumerable collection of JIDs which are on the client's
@@ -1809,6 +1831,7 @@ namespace Sharp.Xmpp.Client
             cusiqextension = im.LoadExtension<CustomIqExtension>();
             messageArchiving = im.LoadExtension<MessageArchiving>();
             messageArchiveManagement = im.LoadExtension<MessageArchiveManagement>();
+            multiUserChat = im.LoadExtension<MultiUserChat>();
         }
     }
 }
