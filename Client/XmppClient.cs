@@ -1755,6 +1755,15 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// Deletes the user with the given ID
+        /// </summary>
+        public void DeleteUser(Jid userId)
+        {
+            AssertValid();
+            serviceAdministration.DeleteUser(userId);
+        }
+
+        /// <summary>
         /// Closes the connection with the XMPP server. This automatically disposes
         /// of the object.
         /// </summary>
