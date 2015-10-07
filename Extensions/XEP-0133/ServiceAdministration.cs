@@ -151,35 +151,37 @@ namespace Sharp.Xmpp.Extensions
 
         public void DisableUser(Jid userId)
         {
-            // declare namespaces
-            XNamespace commandNamespace = "http://jabber.org/protocol/commands";
-            XNamespace xNamespace = "jabber:x:data";
+            throw new NotImplementedException();
 
-            // request to disable a user
-            var command1 = new XElement(commandNamespace + "command",
-                new XAttribute("action", "execute"),
-                new XAttribute("node", "http://jabber.org/protocol/admin#disable-user"));
+            //// declare namespaces
+            //XNamespace commandNamespace = "http://jabber.org/protocol/commands";
+            //XNamespace xNamespace = "jabber:x:data";
 
-            var response1 = IM.IqRequest(IqType.Set, IM.Hostname, IM.Jid, command1.ToXmlElement());
-            response1.ThrowIfError();
+            //// request to disable a user
+            //var command1 = new XElement(commandNamespace + "command",
+            //    new XAttribute("action", "execute"),
+            //    new XAttribute("node", "http://jabber.org/protocol/admin#disable-user"));
 
-            // disable user
-            var sessionId = response1.Data["command"].Attributes["sessionid"].Value;
-            var command2 = new XElement(commandNamespace + "command",
-                new XAttribute("node", "http://jabber.org/protocol/admin#disable-user"),
-                new XAttribute("sessionid", sessionId),
-                new XElement(xNamespace + "x",
-                    new XAttribute("type", "submit"),
-                    new XElement(xNamespace + "field",
-                        new XAttribute("type", "hidden"),
-                        new XAttribute("var", "FORM_TYPE"),
-                        new XElement(xNamespace + "value", "http://jabber.org/protocol/admin")),
-                    new XElement(xNamespace + "field",
-                        new XAttribute("var", "accountjids"),
-                        new XElement(xNamespace + "value", userId))));
+            //var response1 = IM.IqRequest(IqType.Set, IM.Hostname, IM.Jid, command1.ToXmlElement());
+            //response1.ThrowIfError();
 
-            var response2 = IM.IqRequest(IqType.Set, IM.Hostname, IM.Jid, command2.ToXmlElement());
-            response2.ThrowIfError();
+            //// disable user
+            //var sessionId = response1.Data["command"].Attributes["sessionid"].Value;
+            //var command2 = new XElement(commandNamespace + "command",
+            //    new XAttribute("node", "http://jabber.org/protocol/admin#disable-user"),
+            //    new XAttribute("sessionid", sessionId),
+            //    new XElement(xNamespace + "x",
+            //        new XAttribute("type", "submit"),
+            //        new XElement(xNamespace + "field",
+            //            new XAttribute("type", "hidden"),
+            //            new XAttribute("var", "FORM_TYPE"),
+            //            new XElement(xNamespace + "value", "http://jabber.org/protocol/admin")),
+            //        new XElement(xNamespace + "field",
+            //            new XAttribute("var", "accountjids"),
+            //            new XElement(xNamespace + "value", userId))));
+
+            //var response2 = IM.IqRequest(IqType.Set, IM.Hostname, IM.Jid, command2.ToXmlElement());
+            //response2.ThrowIfError();
         }
     }
 }
