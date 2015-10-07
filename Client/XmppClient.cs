@@ -1764,6 +1764,24 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// Enables the user with the given ID
+        /// </summary>
+        public void EnableUser(Jid userId)
+        {
+            AssertValid();
+            serviceAdministration.EnableUser(userId);
+        }
+
+        /// <summary>
+        /// Disables the user with the given ID
+        /// </summary>
+        public void DisableUser(Jid userId)
+        {
+            AssertValid();
+            serviceAdministration.DisableUser(userId);
+        }
+
+        /// <summary>
         /// Closes the connection with the XMPP server. This automatically disposes
         /// of the object.
         /// </summary>

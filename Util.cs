@@ -236,13 +236,37 @@ namespace Sharp.Xmpp
 
         public static void ThrowIfError(this Iq source)
         {
+            // do not throw error if the IQ is good
             if (source == null || source.Type != IqType.Error)
             {
                 return;
             }
 
-            var errorText = source.Data["error"].GetElementsByTagName("text")[0].InnerText; // todo: null checks
-            throw new Exception(errorText);
+            // throw unspecified error if no error element exists
+            var errorElement = source.Data["error"];
+            if (errorElement == null)
+            {
+                throw new XmppException("An unspecified error occured");
+            }
+
+            // parse error
+            XmppError error;
+            try
+            {
+                error = new XmppError(errorElement);
+            }
+            catch
+            {
+                throw new XmppException("An unspecified error occured");
+            }
+
+            // throw error (using error text or error condition)
+            if (!string.IsNullOrEmpty(error.Text))
+            {
+                throw new XmppErrorException(error, error.Text);
+            }
+
+            throw new XmppErrorException(error, error.Condition.ToString());
         }
     }
 }
