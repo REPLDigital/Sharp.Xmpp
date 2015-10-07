@@ -36,6 +36,9 @@ namespace Sharp.Xmpp.Client
         /// </summary>
         private MultiUserChat multiUserChat;
 
+        private ServiceAdministration serviceAdministration;
+        private AdHocCommands adHocCommands;
+
         /// <summary>
         /// Provides access to the 'Message Archiving' XMPP extension functionality.
         /// </summary>
@@ -1732,6 +1735,18 @@ namespace Sharp.Xmpp.Client
             return items;
         }
 
+        public List<AdHocCommand> GetAdHocCommands()
+        {
+            AssertValid();
+            return adHocCommands.GetAdHocCommands();
+        }
+
+        public void AddUser(Jid userId, string password, string verifiedPassword, string email, string firstName, string lastName)
+        {
+            AssertValid();
+            serviceAdministration.AddUser(userId, password, verifiedPassword, email, firstName, lastName);
+        }
+
         /// <summary>
         /// Closes the connection with the XMPP server. This automatically disposes
         /// of the object.
@@ -1832,6 +1847,8 @@ namespace Sharp.Xmpp.Client
             messageArchiving = im.LoadExtension<MessageArchiving>();
             messageArchiveManagement = im.LoadExtension<MessageArchiveManagement>();
             multiUserChat = im.LoadExtension<MultiUserChat>();
+            serviceAdministration = im.LoadExtension<ServiceAdministration>();
+            adHocCommands = im.LoadExtension<AdHocCommands>();
         }
     }
 }
