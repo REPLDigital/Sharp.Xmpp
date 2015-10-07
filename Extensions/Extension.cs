@@ -171,5 +171,8 @@
         /// </summary>
         /// <remarks>Defined in XEP-0045.</remarks>
         MultiUserChat,
+
+        ServiceAdministration,
+        AdHocCommands,
     }
 }

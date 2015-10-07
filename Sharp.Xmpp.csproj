@@ -97,6 +97,8 @@
     <Compile Include="Extensions\XEP-0020\FeatureNegotiation.cs" />
     <Compile Include="Extensions\XEP-0030\Item.cs" />
     <Compile Include="Extensions\XEP-0045\MultiUserChat.cs" />
+    <Compile Include="Extensions\XEP-0050\AdHocCommand.cs" />
+    <Compile Include="Extensions\XEP-0050\AdHocCommands.cs" />
     <Compile Include="Extensions\XEP-0059\XmppPage.cs" />
     <Compile Include="Extensions\XEP-0059\XmppPageRequest.cs" />
     <Compile Include="Extensions\XEP-0065\IPAddressExtensions.cs" />
@@ -154,6 +156,8 @@
     <Compile Include="Extensions\XEP-0118\TuneEventArgs.cs" />
     <Compile Include="Extensions\XEP-0118\TuneInformation.cs" />
     <Compile Include="Extensions\XEP-0118\UserTune.cs" />
+    <Compile Include="Extensions\XEP-0133\Helper.cs" />
+    <Compile Include="Extensions\XEP-0133\ServiceAdministration.cs" />
     <Compile Include="Extensions\XEP-0136\ArchivedChat.cs" />
     <Compile Include="Extensions\XEP-0136\ArchivedChatId.cs" />
     <Compile Include="Extensions\XEP-0136\ArchivedMessage.cs" />
