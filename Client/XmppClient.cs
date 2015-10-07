@@ -1735,12 +1735,19 @@ namespace Sharp.Xmpp.Client
             return items;
         }
 
+        /// <summary>
+        /// Gets the list of commands the XMPP server supports for the current user
+        /// </summary>
+        /// <returns></returns>
         public List<AdHocCommand> GetAdHocCommands()
         {
             AssertValid();
             return adHocCommands.GetAdHocCommands();
         }
 
+        /// <summary>
+        /// Creates a new user
+        /// </summary>
         public void AddUser(Jid userId, string password, string verifiedPassword, string email, string firstName, string lastName)
         {
             AssertValid();
