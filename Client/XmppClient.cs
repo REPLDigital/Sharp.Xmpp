@@ -1681,6 +1681,28 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// Create a multi-user chat room
+        /// </summary>
+        /// <param name="mucService">The MUC service which should host the room</param>
+        /// <param name="roomName">The desired name of the room</param>
+        /// <returns></returns>
+        public Task<JoinRoomResult> JoinRoom(Jid mucService, string roomName)
+        {
+            return multiUserChat.JoinRoom(mucService, roomName);
+        }
+
+        /// <summary>
+        /// Leave a multi-user chat room
+        /// </summary>
+        /// <param name="mucService">The MUC service that is hosting the room</param>
+        /// <param name="roomName">The name of the room to leave</param>
+        /// <param name="status">An optional parting message</param>
+        public Task LeaveRoom(Jid mucService, string roomName, string status)
+        {
+            return multiUserChat.LeaveRoom(mucService, roomName, status);
+        }
+
+        /// <summary>
         /// Get a list of multi-user chat rooms that are available on a service
         /// </summary>
         /// <param name="mucService">The Jid of the multi-user chat service to query</param>
