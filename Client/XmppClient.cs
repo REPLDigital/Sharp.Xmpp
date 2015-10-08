@@ -1,4 +1,5 @@
 ﻿using Sharp.Xmpp.Extensions;
+using Sharp.Xmpp.Extensions.Dataforms;
 using Sharp.Xmpp.Im;
 using System;
 using System.Collections.Generic;
@@ -1686,8 +1687,8 @@ namespace Sharp.Xmpp.Client
         /// <summary>
         /// Create a multi-user chat room
         /// </summary>
-        /// <param name="mucService">The MUC service which should host the room</param>
-        /// <param name="roomName">The desired name of the room</param>
+        /// <param name="mucService">The MUC service which hosts the room</param>
+        /// <param name="roomName">The name of the room</param>
         /// <returns></returns>
         public Task<JoinRoomResult> JoinRoom(Jid mucService, string roomName)
         {
@@ -1712,6 +1713,27 @@ namespace Sharp.Xmpp.Client
         public IList<XmppItem> GetRooms(Jid mucService)
         {
             return multiUserChat.GetRooms(mucService);
+        }
+
+        /// <summary>
+        /// Set the configuration of a multi-user chat room. Use GetRoomConfiguration first to discover configurable parameters.
+        /// </summary>
+        /// <param name="mucService">The MUC service that hosts the room</param>
+        /// <param name="roomName">The name of the room to configure</param>
+        /// <param name="form">Configuration values for the room</param>
+        public void SetRoomConfiguration(Jid mucService, string roomName, SubmitForm form)
+        {
+            multiUserChat.SetRoomConfiguration(mucService, roomName, form);
+        }
+
+        /// <summary>
+        /// Get the configuration of a multi-user chat room.
+        /// </summary>
+        /// <param name="mucService">The MUC service that hosts the room</param>
+        /// <param name="roomName">The name of the room to configure</param>
+        public RequestForm GetRoomConfiguration(Jid mucService, string roomName)
+        {
+            return multiUserChat.GetRoomConfiguration(mucService, roomName);
         }
 
         /// <summary>

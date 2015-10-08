@@ -244,6 +244,8 @@ namespace Sharp.Xmpp.Extensions.Dataforms
         /// <returns>This data form</returns>
         public DataForm AddValue(string name, Jid value)
         {
+            value.ThrowIfNull();
+
             Element.Child(new JidField(name, value).ToXmlElement());
 
             return this;
@@ -257,6 +259,8 @@ namespace Sharp.Xmpp.Extensions.Dataforms
         /// <returns>This data form</returns>
         public DataForm AddValue(string name, string value)
         {
+            value.ThrowIfNull();
+
             Element.Child(new TextField(name, value).ToXmlElement());
 
             return this;
@@ -270,7 +274,13 @@ namespace Sharp.Xmpp.Extensions.Dataforms
         /// <returns>This data form</returns>
         public DataForm AddUntypedValue(string name, object value)
         {
-            Element.Child(Xml.Element("field", xmlns).Attr("var", name).Child(Xml.Element("value", xmlns).Text(value.ToString())));
+            var valueNode = Xml.Element("value", xmlns);
+            if (value != null)
+            {
+                valueNode.Text(value.ToString());
+            }
+
+            Element.Child(Xml.Element("field", xmlns).Attr("var", name).Child(valueNode));
 
             return this;
         }
@@ -284,7 +294,13 @@ namespace Sharp.Xmpp.Extensions.Dataforms
         /// <returns>This data form</returns>
         public DataForm AddValue(string name, DataFieldType type, object value)
         {
-            Element.Child(Xml.Element("field", xmlns).Attr("var", name).Attr("type", type.ToString()).Child(Xml.Element("value", xmlns).Text(value.ToString())));
+            var valueNode = Xml.Element("value", xmlns);
+            if (value != null)
+            {
+                valueNode.Text(value.ToString());
+            }
+
+            Element.Child(Xml.Element("field", xmlns).Attr("var", name).Attr("type", type.ToString()).Child(valueNode));
 
             return this;
         }

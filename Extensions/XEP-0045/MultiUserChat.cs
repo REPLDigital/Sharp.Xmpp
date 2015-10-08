@@ -1,4 +1,5 @@
-﻿using Sharp.Xmpp.Im;
+﻿using Sharp.Xmpp.Extensions.Dataforms;
+using Sharp.Xmpp.Im;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -65,11 +66,59 @@ namespace Sharp.Xmpp.Extensions
 
         public IList<XmppItem> GetRooms(Jid mucService)
         {
+            mucService.ThrowIfNull("mucService");
+
             return disco.GetItems(mucService).ToList();
+        }
+
+        public RequestForm GetRoomConfiguration(Jid mucService, string roomName)
+        {
+            mucService.ThrowIfNull("mucService");
+            roomName.ThrowIfNull("roomName");
+
+            var response = IM.IqRequest(Core.IqType.Get, new Jid(mucService.Domain, roomName), IM.Jid, Xml.Element("query", "http://jabber.org/protocol/muc#owner"));
+
+            response.ThrowIfError();
+
+            var queryNode = response.Data["query"];
+            if (queryNode != null)
+            {
+                var formNode = queryNode["x"];
+
+                if (formNode != null)
+                {
+                    return new RequestForm(formNode);
+                }
+            }
+
+            throw new XmppException("Failed to fetch room configuration");
+        }
+
+        public void SetRoomConfiguration(Jid mucService, string roomName, SubmitForm form)
+        {
+            mucService.ThrowIfNull("mucService");
+            roomName.ThrowIfNull("roomName");
+            form.ThrowIfNull("form");
+
+            var payload = Xml.Element("query", "http://jabber.org/protocol/muc#owner");
+
+            if (!form.Fields.Any(f => f.Name == "FORM_TYPE"))
+            {
+                form.AddUntypedValue("FORM_TYPE", "http://jabber.org/protocol/muc#roomconfig");
+            }
+
+            payload.Child(form.ToXmlElement());
+
+            var response = IM.IqRequest(Core.IqType.Set, new Jid(mucService.Domain, roomName), IM.Jid, payload);
+
+            response.ThrowIfError();
         }
 
         public Task<JoinRoomResult> JoinRoom(Jid mucService, string roomName, string password = "")
         {
+            mucService.ThrowIfNull("mucService");
+            roomName.ThrowIfNull("roomName");
+
             const string ns = "http://jabber.org/protocol/muc";
 
             var tcs = new TaskCompletionSource<JoinRoomResult>();
@@ -90,6 +139,9 @@ namespace Sharp.Xmpp.Extensions
 
         public Task LeaveRoom(Jid mucService, string roomName, string status = "")
         {
+            mucService.ThrowIfNull("mucService");
+            roomName.ThrowIfNull("roomName");
+
             const string ns = "http://jabber.org/protocol/muc";
 
             var tcs = new TaskCompletionSource<bool>();
