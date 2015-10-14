@@ -1689,8 +1689,8 @@ namespace Sharp.Xmpp.Client
         /// </summary>
         /// <param name="mucService">The MUC service which hosts the room</param>
         /// <param name="roomName">The name of the room</param>
-        /// <returns></returns>
-        public Task<JoinRoomResult> JoinRoom(Jid mucService, string roomName)
+        /// <param name="password">An optional password for the room</param>
+        public Task<JoinRoomResult> JoinRoom(Jid mucService, string roomName, string password = "")
         {
             return multiUserChat.JoinRoom(mucService, roomName);
         }
@@ -1701,7 +1701,7 @@ namespace Sharp.Xmpp.Client
         /// <param name="mucService">The MUC service that is hosting the room</param>
         /// <param name="roomName">The name of the room to leave</param>
         /// <param name="status">An optional parting message</param>
-        public Task LeaveRoom(Jid mucService, string roomName, string status)
+        public Task LeaveRoom(Jid mucService, string roomName, string status = "")
         {
             return multiUserChat.LeaveRoom(mucService, roomName, status);
         }
