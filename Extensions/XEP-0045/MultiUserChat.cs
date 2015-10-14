@@ -124,7 +124,7 @@ namespace Sharp.Xmpp.Extensions
             var tcs = new TaskCompletionSource<JoinRoomResult>();
 
             var roomJid = new Jid(mucService.Domain, roomName, IM.Jid.Node);
-            m_pendingRoomJoins[roomJid] = tcs;
+            m_pendingRoomJoins[roomJid.ToString().ToLower()] = tcs;
 
             var payload = Xml.Element("x", ns);
             if (!string.IsNullOrEmpty(password))
@@ -147,7 +147,7 @@ namespace Sharp.Xmpp.Extensions
             var tcs = new TaskCompletionSource<bool>();
 
             var roomJid = new Jid(mucService.Domain, roomName, IM.Jid.Node);
-            m_pendingRoomLeaves[roomJid] = tcs;
+            m_pendingRoomLeaves[roomJid.ToString().ToLower()] = tcs;
 
             XmlElement payload = null;
             if (!string.IsNullOrEmpty(status))
@@ -162,25 +162,27 @@ namespace Sharp.Xmpp.Extensions
 
         public bool Input(Presence stanza)
         {
+            string canonFrom = stanza.From.ToString().ToLower();
+
             //Handle error case
             if (stanza.Type == PresenceType.Error)
             {
                 //Check if the error relates to a pending room join operation
                 TaskCompletionSource<JoinRoomResult> pendingRoomJoin = null;
-                if (m_pendingRoomJoins.TryGetValue(stanza.From, out pendingRoomJoin))
+                if (m_pendingRoomJoins.TryGetValue(canonFrom, out pendingRoomJoin))
                 {
                     pendingRoomJoin.SetException(Util.ExceptionFromError(stanza.Data["error"], "Failed to join room " + stanza.From.ToString()));
-                    m_pendingRoomJoins.TryRemove(stanza.From, out pendingRoomJoin);
+                    m_pendingRoomJoins.TryRemove(canonFrom, out pendingRoomJoin);
 
                     return true;
                 }
 
                 //Check if the error relates to a pending room leave operation
                 TaskCompletionSource<bool> pendingRoomLeave = null;
-                if (m_pendingRoomLeaves.TryGetValue(stanza.From, out pendingRoomLeave))
+                if (m_pendingRoomLeaves.TryGetValue(canonFrom, out pendingRoomLeave))
                 {
                     pendingRoomLeave.SetException(Util.ExceptionFromError(stanza.Data["error"], "Failed to leave room " + stanza.From.ToString()));
-                    m_pendingRoomLeaves.TryRemove(stanza.From, out pendingRoomLeave);
+                    m_pendingRoomLeaves.TryRemove(canonFrom, out pendingRoomLeave);
 
                     return true;
                 }
@@ -195,19 +197,20 @@ namespace Sharp.Xmpp.Extensions
                 {
                     //See if the result relates to a pending room join operation
                     TaskCompletionSource<JoinRoomResult> pendingRoomJoin = null;
-                    if (m_pendingRoomJoins.TryGetValue(stanza.From, out pendingRoomJoin))
+                    if (m_pendingRoomJoins.TryGetValue(canonFrom, out pendingRoomJoin))
                     {
                         //Parse room affiliation and role
                         RoomAffiliation affiliation = RoomAffiliation.None;
                         if (itemNode.HasAttribute("affiliation"))
                         {
-                            Enum.TryParse<RoomAffiliation>(itemNode.GetAttribute("affiliation"), out affiliation);
+                            string a = itemNode.GetAttribute("affiliation");
+                            Enum.TryParse<RoomAffiliation>(a, true, out affiliation);
                         }
 
                         RoomRole role = RoomRole.None;
                         if (itemNode.HasAttribute("role"))
                         {
-                            Enum.TryParse<RoomRole>(itemNode.GetAttribute("role"), out role);
+                            Enum.TryParse<RoomRole>(itemNode.GetAttribute("role"), true, out role);
                         }
 
                         var result = new JoinRoomResult()
@@ -258,18 +261,18 @@ namespace Sharp.Xmpp.Extensions
                             pendingRoomJoin.SetResult(result);
                         }
 
-                        m_pendingRoomJoins.TryRemove(stanza.From, out pendingRoomJoin);
+                        m_pendingRoomJoins.TryRemove(canonFrom, out pendingRoomJoin);
 
                         return true;
                     }
 
                     //See if the result relates to a pending room leave operation
                     TaskCompletionSource<bool> pendingRoomLeave = null;
-                    if (m_pendingRoomLeaves.TryGetValue(stanza.From, out pendingRoomLeave))
+                    if (m_pendingRoomLeaves.TryGetValue(canonFrom, out pendingRoomLeave))
                     {
                         pendingRoomLeave.SetResult(true);
 
-                        m_pendingRoomLeaves.TryRemove(stanza.From, out pendingRoomLeave);
+                        m_pendingRoomLeaves.TryRemove(canonFrom, out pendingRoomLeave);
 
                         return true;
                     }
