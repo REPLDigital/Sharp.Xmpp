@@ -25,10 +25,10 @@ namespace Sharp.Xmpp.Extensions
 
             if (delay != null && delay.NamespaceURI == "urn:xmpp:delay")
             {
-                var stampAttribute = delay["stamp"];
+                var stampAttribute = delay.GetAttribute("stamp");
                 if (stampAttribute != null)
                 {
-                    timestamp = DateTimeProfiles.FromXmppString(stampAttribute.InnerText);
+                    timestamp = DateTimeProfiles.FromXmppString(stampAttribute);
                 }
             }
 
