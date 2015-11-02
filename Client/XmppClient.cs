@@ -463,6 +463,21 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// The event that is raised when an error message is received.
+        /// </summary>
+        public event EventHandler<MessageEventArgs> ErrorMessage
+        {
+            add
+            {
+                im.ErrorMessage += value;
+            }
+            remove
+            {
+                im.ErrorMessage -= value;
+            }
+        }
+
+        /// <summary>
         /// The event that is raised periodically for every file-transfer operation to
         /// inform subscribers of the progress of the operation.
         /// </summary>
