@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Sharp.Xmpp.Core
 {
@@ -161,6 +162,15 @@ namespace Sharp.Xmpp.Core
         {
             element.ThrowIfNull("element");
             this.Element = element;
+        }
+
+        /// <summary>
+        /// Converts the data XmlElement to an XElement.
+        /// </summary>
+        /// <returns>The data of the stanza as an XElement.</returns>
+        public XElement DataXElememt()
+        {
+            return XElement.Parse( this.ToString() );
         }
 
         /// <summary>
