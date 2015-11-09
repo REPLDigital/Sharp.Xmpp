@@ -100,6 +100,11 @@ namespace Sharp.Xmpp.Client
         /// </summary>
         private UserTune userTune;
 
+        /// <summary>
+        /// Provices access to the 'Direct MUC invitations' XMPP extension functionality;
+        /// </summary>
+        private DirectMucInvitations directMucInvitations;
+
 #if WINDOWSPLATFORM
         /// <summary>
         /// Provides access to the 'User Avatar' XMPP extension functionality.
@@ -1692,6 +1697,19 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// Invite a user to a multi-user chat
+        /// </summary>
+        /// <param name="mucService">The MUC service which hosts the room</param>
+        /// <param name="roomName">The name of the room</param>
+        /// <param name="userId">The Jid of the user to invite</param>
+        /// <param name="reason">An optional reason for inviting the user to the room</param>
+        /// <param name="password">The password for the room</param>
+        public void InviteUserToMuc(Jid mucService, string roomName, Jid userId, string reason = null, string password = null)
+        {
+            directMucInvitations.InviteUserToMuc(mucService, roomName, userId, reason, password);
+        }
+
+        /// <summary>
         /// Get a list of multi-user chat services that are hosted on the server
         /// </summary>
         public IList<Jid> GetMucServices()
@@ -1942,6 +1960,7 @@ namespace Sharp.Xmpp.Client
             multiUserChat = im.LoadExtension<MultiUserChat>();
             serviceAdministration = im.LoadExtension<ServiceAdministration>();
             adHocCommands = im.LoadExtension<AdHocCommands>();
+            directMucInvitations = im.LoadExtension<DirectMucInvitations>();
         }
     }
 }

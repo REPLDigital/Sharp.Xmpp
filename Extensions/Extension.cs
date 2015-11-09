@@ -181,5 +181,11 @@
         /// An extension that enables an entity to initiate a command session where there is no preferred namespace
         /// </summary>
         AdHocCommands,
+
+        /// <summary>
+        /// A method for sending an invitation directly from the user to the contact.
+        /// </summary>
+        /// <remarks>Defined in XEP-0249.</remarks>
+        DirectMucInvitations
     }
 }
