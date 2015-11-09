@@ -170,7 +170,7 @@ namespace Sharp.Xmpp.Core
         /// <returns>The data of the stanza as an XElement.</returns>
         public XElement DataXElememt()
         {
-            return XElement.Parse( this.ToString() );
+            return XElement.Parse(this.ToString());
         }
 
         /// <summary>

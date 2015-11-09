@@ -133,7 +133,7 @@ namespace Sharp.Xmpp.Extensions
 
             // validate response
             var noteElement = response2.ToXDocument().Root.Element(commandNamespace + "command").Element(commandNamespace + "note");
-            var noteText = (noteElement == null ? null : noteElement.Value);
+            var noteText = noteElement == null ? null : noteElement.Value;
             if (noteText != null)
             {
                 // todo: this is weak but no other way to identify
