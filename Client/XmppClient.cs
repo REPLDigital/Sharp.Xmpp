@@ -1725,7 +1725,7 @@ namespace Sharp.Xmpp.Client
         /// <param name="password">An optional password for the room</param>
         public Task<JoinRoomResult> JoinRoom(Jid mucService, string roomName, string password = "")
         {
-            return multiUserChat.JoinRoom(mucService, roomName);
+            return multiUserChat.JoinRoom(mucService, roomName, password);
         }
 
         /// <summary>
