@@ -1,11 +1,14 @@
 ﻿using Sharp.Xmpp.Core;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 
 namespace Sharp.Xmpp.Extensions
 {
-    internal class DirectMucInvitations : XmppExtension
+    internal class DirectMucInvitations : XmppExtension, IInputFilter<Sharp.Xmpp.Im.Message>
     {
+        public event EventHandler<DirectMucInvitation> DirectMucInvitationReceived;
+
         private const string xmlns = "jabber:x:conference";
 
         public override IEnumerable<string> Namespaces
@@ -42,6 +45,32 @@ namespace Sharp.Xmpp.Extensions
             }
 
             IM.SendMessage(new Im.Message(new Message(userId, IM.Jid, inviteNode)));
+        }
+
+        public bool Input(Sharp.Xmpp.Im.Message stanza)
+        {
+            var xNode = stanza.Data["x"];
+            if (xNode != null && xNode.NamespaceURI == xmlns)
+            {
+                if (DirectMucInvitationReceived != null)
+                {
+                    string jid = xNode.GetAttribute("jid");
+                    string reason = xNode.GetAttribute("reason");
+                    string password = xNode.GetAttribute("password");
+
+                    DirectMucInvitationReceived(IM, new DirectMucInvitation()
+                    {
+                        From = stanza.From,
+                        Password = password,
+                        Reason = reason,
+                        RoomJid = new Jid(jid)
+                    });
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

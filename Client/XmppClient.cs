@@ -394,6 +394,21 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// The event that is raised when a direct muc invitation is received.
+        /// </summary>
+        public event EventHandler<DirectMucInvitation> DirectMucInvitationReceived
+        {
+            add
+            {
+                directMucInvitations.DirectMucInvitationReceived += value;
+            }
+            remove
+            {
+                directMucInvitations.DirectMucInvitationReceived -= value;
+            }
+        }
+
+        /// <summary>
         /// The event that is raised when a mood notification has been received.
         /// </summary>
         public event EventHandler<MoodChangedEventArgs> MoodChanged
