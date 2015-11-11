@@ -458,6 +458,7 @@ namespace Sharp.Xmpp.Core
             try
             {
                 client = new TcpClient(Hostname, Port);
+                client.NoDelay = true;
                 stream = client.GetStream();
                 // Sets up the connection which includes TLS and possibly SASL negotiation.
                 SetupConnection(this.resource);
