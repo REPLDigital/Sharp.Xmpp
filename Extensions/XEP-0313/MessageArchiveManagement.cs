@@ -64,7 +64,7 @@ namespace Sharp.Xmpp.Extensions
         /// <param name="with">Optional filter to only return messages if they match the supplied JID</param>
         /// <param name="start">Optional filter to only return messages whose timestamp is equal to or later than the given timestamp.</param>
         /// <param name="end">Optional filter to only return messages whose timestamp is equal to or earlier than the timestamp given in the 'end' field.</param>
-        public Task<XmppPage<Message>> GetArchivedMessages(XmppPageRequest pageRequest, Jid with = null, DateTimeOffset? start = null, DateTimeOffset? end = null)
+        internal Task<XmppPage<Message>> GetArchivedMessages(XmppPageRequest pageRequest, Jid with = null, Jid roomId = null, DateTimeOffset? start = null, DateTimeOffset? end = null)
         {
             string queryId = Guid.NewGuid().ToString().Replace("-", "");
 
@@ -99,7 +99,7 @@ namespace Sharp.Xmpp.Extensions
             var tcs = new TaskCompletionSource<XmppPage<Message>>();
             var queryTask = pendingQueries[queryId] = new ArchiveQueryTask(tcs);
 
-            var response = IM.IqRequest(Sharp.Xmpp.Core.IqType.Set, null, null, request);
+            var response = IM.IqRequest(Sharp.Xmpp.Core.IqType.Set, roomId, null, request);
 
             if (response.Type == Core.IqType.Error)
             {
