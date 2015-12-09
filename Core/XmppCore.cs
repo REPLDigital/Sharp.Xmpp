@@ -397,7 +397,7 @@ namespace Sharp.Xmpp.Core
             }
             dnsIsInit = true;
 
-            DnsMessage dnsMessage = DnsClient.Default.Resolve("_xmpp-client._tcp." + domain, RecordType.Srv);
+            DnsMessage dnsMessage = null;//DnsClient.Default.Resolve("_xmpp-client._tcp." + domain, RecordType.Srv);
             if ((dnsMessage == null) || ((dnsMessage.ReturnCode != ReturnCode.NoError) && (dnsMessage.ReturnCode != ReturnCode.NxDomain)))
             {
                 //If DNS SRV records lookup fails then continue with the host name
