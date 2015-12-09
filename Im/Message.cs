@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security;
 using System.Xml;
 
 namespace Sharp.Xmpp.Im
@@ -180,8 +181,8 @@ namespace Sharp.Xmpp.Im
             AlternateSubjects = new XmlDictionary(Element, "subject", "xml:lang");
             AlternateBodies = new XmlDictionary(Element, "body", "xml:lang");
             Type = type;
-            Body = body;
-            Subject = subject;
+            Body = SecurityElement.Escape(body);
+            Subject = SecurityElement.Escape(subject);
             Thread = thread;
             Timestamp = DelayedDelivery.GetDelayedTimestampOrNow(Element);
         }
