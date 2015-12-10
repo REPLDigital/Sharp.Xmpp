@@ -62,6 +62,7 @@ namespace Sharp.Xmpp.Extensions
         /// </summary>
         /// <param name="pageRequest">Paging options</param>
         /// <param name="with">Optional filter to only return messages if they match the supplied JID</param>
+        /// <param name="roomId">Optional filter to only return messages if they match the supplied JID</param>
         /// <param name="start">Optional filter to only return messages whose timestamp is equal to or later than the given timestamp.</param>
         /// <param name="end">Optional filter to only return messages whose timestamp is equal to or earlier than the timestamp given in the 'end' field.</param>
         internal Task<XmppPage<Message>> GetArchivedMessages(XmppPageRequest pageRequest, Jid with = null, Jid roomId = null, DateTimeOffset? start = null, DateTimeOffset? end = null)
