@@ -1702,7 +1702,7 @@ namespace Sharp.Xmpp.Im
                 string l = element.GetAttribute("xml:lang");
                 if (string.IsNullOrEmpty(l))
                     l = lang;
-                dict.Add(l, element.InnerText);
+                dict[l] = element.InnerText;
             }
             Status status = new Status(availability, dict, prio);
             // Raise Status event.
