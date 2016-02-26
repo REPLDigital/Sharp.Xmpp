@@ -137,10 +137,30 @@ namespace Sharp.Xmpp.Extensions
             return tcs.Task;
         }
 
+        public bool KickUser(Jid mucService, string roomName, string userName, string reason = null)
+        {
+            mucService.ThrowIfNull("mucService");
+            roomName.ThrowIfNullOrEmpty("roomName");
+            userName.ThrowIfNullOrEmpty("userName");
+
+            var query = Xml.Element("query", "http://jabber.org/protocol/muc#admin")
+                .Child(Xml.Element("item").Attr("nick", userName).Attr("role", "none"));
+
+            if (!string.IsNullOrEmpty(reason))
+            {
+                query = query.Child(Xml.Element("reason").Text(reason));
+            }
+
+            var roomJid = new Jid(mucService.Domain, roomName);
+            var response = IM.IqRequest(Core.IqType.Set, roomJid, IM.Jid, query);
+
+            return response.Type == Core.IqType.Result;
+        }
+
         public Task LeaveRoom(Jid mucService, string roomName, string status = "")
         {
             mucService.ThrowIfNull("mucService");
-            roomName.ThrowIfNull("roomName");
+            roomName.ThrowIfNullOrEmpty("roomName");
 
             const string ns = "http://jabber.org/protocol/muc";
 

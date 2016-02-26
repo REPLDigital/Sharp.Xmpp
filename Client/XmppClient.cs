@@ -1737,6 +1737,18 @@ namespace Sharp.Xmpp.Client
         }
 
         /// <summary>
+        /// Remove a user from a MUC
+        /// </summary>
+        /// <param name="mucService">The MUC service which hosts the room</param>
+        /// <param name="roomName">The name of the room</param>>
+        /// <param name="userName">The username of the user who should be removed</param>
+        /// <param name="reason">The (optional) reason that the user is being removed</param>
+        public bool RemoveUserFromMuc(Jid mucService, string roomName, string userName, string reason = null)
+        {
+            return multiUserChat.KickUser(mucService, roomName, userName, reason);
+        }
+
+        /// <summary>
         /// Get a list of multi-user chat services that are hosted on the server
         /// </summary>
         public IList<Jid> GetMucServices()
