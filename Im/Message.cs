@@ -140,6 +140,35 @@ namespace Sharp.Xmpp.Im
             }
         }
 
+		public string ThumbnailUrl 
+		{
+			get
+			{
+				XmlElement bare = GetBare("ThumbnailUrl");
+				if (bare != null)
+					return bare.InnerText;
+				string k = AlternateBodies.Keys.FirstOrDefault();
+				return k != null ? AlternateBodies[k] : null;
+			}
+
+			set
+			{
+				XmlElement bare = GetBare("ThumbnailUrl");
+				if (bare != null)
+				{
+					if (value == null)
+						Element.RemoveChild(bare);
+					else
+						bare.InnerText = value;
+				}
+				else
+				{
+					if (value != null)
+						Element.Child(Xml.Element("MediaUrl").Text(value));
+				}
+			}
+		}
+
         /// <summary>
         /// A dictionary of alternate forms of the message subjects. The keys of the
         /// dictionary denote ISO 2 language codes.
