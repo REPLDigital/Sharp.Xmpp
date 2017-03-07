@@ -46,6 +46,12 @@ namespace Sharp.Xmpp.Im
         /// </summary>
         public Message ForwardedMessage { get; protected set; }
 
+		/// <summary>
+		/// Gets or sets the media item.
+		/// </summary>
+		/// <value>The media item.</value>
+		public MediaItem MediaItem { get; protected set; }
+
         /// <summary>
         /// The conversation thread this message belongs to.
         /// </summary>
@@ -140,7 +146,7 @@ namespace Sharp.Xmpp.Im
             }
         }
 
-		public string ThumbnailUrl 
+		public string ThumbnailUrl
 		{
 			get
 			{
@@ -214,6 +220,13 @@ namespace Sharp.Xmpp.Im
             Subject = SecurityElement.Escape(subject);
             Thread = thread;
             Timestamp = DelayedDelivery.GetDelayedTimestampOrNow(Element);
+
+			var mediaItemNode = Element["media"];
+			if (mediaItemNode != null)
+			{
+				var mediaItemTemp = MediaItem.GetMediaItem(mediaItemNode);
+				MediaItem = mediaItemTemp;
+			}
         }
 
         /// <summary>
@@ -252,6 +265,13 @@ namespace Sharp.Xmpp.Im
             }
             Thread = thread;
             Timestamp = DelayedDelivery.GetDelayedTimestampOrNow(Element);
+
+			var mediaItemNode = Element["media"];
+			if (mediaItemNode != null)
+			{
+				var mediaItemTemp = MediaItem.GetMediaItem(mediaItemNode);
+				MediaItem = mediaItemTemp;
+			}
         }
 
         /// <summary>
@@ -292,6 +312,13 @@ namespace Sharp.Xmpp.Im
                 var forwardedTimestamp = DelayedDelivery.GetDelayedTimestampOrNow(forwardedMessageNode);
                 ForwardedMessage = new Message(forwardedMessageNode["message"], forwardedTimestamp);
             }
+
+			var mediaItemNode = Element["media"];
+			if (mediaItemNode != null)
+			{
+				var mediaItemTemp = MediaItem.GetMediaItem(mediaItemNode);
+				MediaItem = mediaItemTemp;
+			}
         }
 
         /// <summary>
