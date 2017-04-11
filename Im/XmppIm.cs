@@ -428,12 +428,12 @@ namespace Sharp.Xmpp.Im
         /// disposed.</exception>
         public void SendMessage(Jid to, string body, string subject = null,
             string thread = null, MessageType type = MessageType.Normal,
-            CultureInfo language = null)
+		                        CultureInfo language = null, MediaItem mediaItem = null)
         {
             AssertValid();
             to.ThrowIfNull("to");
             body.ThrowIfNullOrEmpty("body");
-            Message m = new Message(to, body, subject, thread, type, language);
+			Message m = new Message(to, body, subject, thread, type, language, mediaItem);
             SendMessage(m);
         }
 
@@ -463,12 +463,12 @@ namespace Sharp.Xmpp.Im
         /// disposed.</exception>
         public void SendMessage(Jid to, IDictionary<string, string> bodies,
             IDictionary<string, string> subjects = null, string thread = null,
-            MessageType type = MessageType.Normal, CultureInfo language = null)
+		                        MessageType type = MessageType.Normal, CultureInfo language = null, MediaItem mediaItem = null)
         {
             AssertValid();
             to.ThrowIfNull("to");
             bodies.ThrowIfNull("bodies");
-            Message m = new Message(to, bodies, subjects, thread, type, language);
+			Message m = new Message(to, bodies, subjects, thread, type, language, mediaItem);
             SendMessage(m);
         }
 

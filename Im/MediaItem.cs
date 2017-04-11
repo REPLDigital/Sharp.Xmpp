@@ -8,6 +8,16 @@ namespace Sharp.Xmpp.Im
 		public string Id { get; private set; }
 		public string Type { get; private set; }
 
+		public MediaItem()
+		{ 
+		}
+
+		public MediaItem(string id, string type)
+		{
+			Id = id;
+			Type = type;
+		}
+
 		public static MediaItem GetMediaItem(XmlElement mediaItemNode)
 		{
 			MediaItem mediaItem = null;

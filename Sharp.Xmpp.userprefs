@@ -1,0 +1,41 @@
+﻿<Properties StartupConfiguration="{0F7EAF83-E652-47D8-AEF5-AE950B148034}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Im/MediaItem.cs">
+    <Files>
+      <File FileName="Core/Message.cs" Line="21" Column="16" />
+      <File FileName="Im/XmppIm.cs" Line="466" Column="121" />
+      <File FileName="Core/XmppCore.cs" Line="872" Column="35" />
+      <File FileName="Core/Stanza.cs" Line="182" Column="1" />
+      <File FileName="Sharp.TestApp/Program.cs" Line="24" Column="1" />
+      <File FileName="Util.cs" Line="87" Column="1" />
+      <File FileName="Client/XmppClient.cs" Line="754" Column="45" />
+      <File FileName="Im/Message.cs" Line="289" Column="112" />
+      <File FileName="Im/MediaItem.cs" Line="21" Column="6" />
+      <File FileName="Extensions/IOutputFilter.cs" Line="15" Column="14" />
+      <File FileName="Xml.cs" Line="117" Column="1" />
+      <File FileName="packages.config" Line="1" Column="1" />
+      <File FileName="Properties/AssemblyInfo.cs" Line="35" Column="40" />
+      <File FileName="Jid.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Sharp.TestApp/Program.cs" line="23" column="75" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Client/XmppClient.cs" line="1948" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/XmppIm.cs" line="490" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/XmppIm.cs" line="500" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/Message.cs" line="292" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/Message.cs" line="356" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/XmppIm.cs" line="437" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/XmppIm.cs" line="472" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/Message.cs" line="341" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Core/XmppCore.cs" line="467" column="14" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Core/Message.cs" line="25" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Core/Message.cs" line="36" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/Message.cs" line="70" column="1" />
+      <Breakpoint file="/Users/markogrady/Projects/Sharp.Xmpp/Im/Message.cs" line="56" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.Sharp.TestApp PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>

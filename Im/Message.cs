@@ -50,7 +50,44 @@ namespace Sharp.Xmpp.Im
 		/// Gets or sets the media item.
 		/// </summary>
 		/// <value>The media item.</value>
-		public MediaItem MediaItem { get; protected set; }
+		public MediaItem MediaItem { 
+			get
+			{
+				XmlElement bare = GetBare("media");
+				if (bare != null)
+				{
+					var id =  bare.GetAttribute("id");
+					var type =  bare.GetAttribute("type");
+
+					return new MediaItem(id, type);
+				}
+
+				return null;
+			}
+
+			protected set
+			{
+				XmlElement bare = GetBare("media");
+				if (bare != null)
+				{
+					if (value == null)
+						Element.RemoveChild(bare);
+					else
+						bare.InnerText = value.ToString();
+				}
+				else
+				{
+					if (value != null)
+					{
+						var element = Xml.Element("media");
+						element.SetAttribute("id", value.Id);
+						element.SetAttribute("type", value.Type);
+						Element.Child(element);
+					}
+				}
+
+			}
+		}
 
         /// <summary>
         /// The conversation thread this message belongs to.
@@ -209,8 +246,8 @@ namespace Sharp.Xmpp.Im
         /// <exception cref="ArgumentNullException">The to parameter is null.</exception>
         /// <exception cref="ArgumentException">The body parameter is the empty string.</exception>
         public Message(Jid to, string body = null, string subject = null, string thread = null,
-            MessageType type = MessageType.Normal, CultureInfo language = null)
-            : base(to, null, null, null, language)
+		               MessageType type = MessageType.Normal, CultureInfo language = null, MediaItem mediaItem = null)
+			: base(to, null, null, null, language)
         {
             to.ThrowIfNull("to");
             AlternateSubjects = new XmlDictionary(Element, "subject", "xml:lang");
@@ -220,6 +257,7 @@ namespace Sharp.Xmpp.Im
             Subject = SecurityElement.Escape(subject);
             Thread = thread;
             Timestamp = DelayedDelivery.GetDelayedTimestampOrNow(Element);
+			MediaItem = mediaItem;
 
 			var mediaItemNode = Element["media"];
 			if (mediaItemNode != null)
@@ -248,7 +286,7 @@ namespace Sharp.Xmpp.Im
         /// parameter is null.</exception>
         public Message(Jid to, IDictionary<string, string> bodies,
             IDictionary<string, string> subjects = null, string thread = null,
-            MessageType type = MessageType.Normal, CultureInfo language = null)
+		               MessageType type = MessageType.Normal, CultureInfo language = null, MediaItem mediaItem = null)
             : base(to, null, null, null, language)
         {
             to.ThrowIfNull("to");
@@ -265,6 +303,7 @@ namespace Sharp.Xmpp.Im
             }
             Thread = thread;
             Timestamp = DelayedDelivery.GetDelayedTimestampOrNow(Element);
+			MediaItem = mediaItem;
 
 			var mediaItemNode = Element["media"];
 			if (mediaItemNode != null)
